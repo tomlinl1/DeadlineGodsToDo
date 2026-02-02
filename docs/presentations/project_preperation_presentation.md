@@ -131,94 +131,10 @@ Users unlock visual customization rewards by completing tasks.
 
 ---
 
-## Data Model Overview
+## Total Features and Requirements
 
-### Core Entities
-- User  
-- Task  
-- Custom View  
-- Customization Item  
-
-### Relationships
-- A user has many tasks  
-- A user can save multiple custom views  
-- A user can unlock multiple customization items  
-
----
-
-## System Architecture
-
-The Deadline Crusher uses a **three-tier architecture**:
-
-1. Presentation Layer  
-2. Application Layer  
-3. Data Layer  
-
-Each layer is independently maintained and scalable.
-
----
-
-## Presentation Layer (Frontend)
-
-- JavaScript with **React**
-- Component-based UI  
-- Handles user interaction and rendering  
-- Communicates with backend via REST API  
-
----
-
-## Application Layer (Backend)
-
-- **Node.js** runtime  
-- **Express.js** framework  
-- RESTful API endpoints  
-- Handles business logic and validation  
-
----
-
-## Data Layer (Databases)
-
-- **MongoDB**
-  - Document-based storage
-  - Mongoose ODM for schema modeling  
-
-- **SQLite**
-  - Relational data storage
-  - Object-relational database access  
-
----
-
-## APIs & Data Access
-
-- RESTful API design using Express  
-- JSON-based client–server communication  
-- Mongoose ODM for MongoDB  
-- SQLite APIs for relational data  
-- Supports both document and relational models  
-
----
-
-## Testing Strategy
-
-### Acceptance Tests
-- Users can create and complete tasks  
-- Calendar displays tasks correctly  
-- Smart lists update automatically  
-- Customization unlocks on completion  
-
----
-
-## Testing Strategy (Continued)
-
-### Integration Tests
-- Frontend communicates correctly with REST API  
-- Filters and sorting work together  
-- Custom views persist across sessions  
-
-### End-to-End Tests
-- Task creation → completion → reward unlock  
-- Saved views reload correctly  
-- User data persists across reloads  
+Features: 3
+Requirements: 14
 
 ---
 
@@ -244,17 +160,13 @@ Each layer is independently maintained and scalable.
 
 ---
 
-## Technology Stack
+## Team Rules
 
-### Frontend
-- JavaScript  
-- React  
+1. Communicate effectively and consistantly.
+2. All weekly updates must be finished by Saturday of the current week.
+3. Communication will be handled over discord weekly for quick messages and questions. Full meetings have been discussed, but days and times have not been established.
 
-### Backend
-- Node.js  
-- Express.js  
-- REST API  
+---
 
-### Database
-- MongoDB with Mongoose ODM  
-- SQLite with relational APIs  
+## Questions?
+
