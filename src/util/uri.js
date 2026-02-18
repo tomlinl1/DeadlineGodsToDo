@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 // Load environment variables
 dotenv.config({
   quiet: true,
-  path: "../.env",
 });
 
 // Validate required variables
@@ -20,7 +19,7 @@ export const databasename = process.env.MONGO_DATABASE;
 if (!databasename) throw new Error("MONGO_DATABASE is not defined");
 
 // Construct the MongoDB connection string
-const uri = `mongodb+srv://${user}:${password}@cluster0.${cluster}.mongodb.net/${databasename}?appName=Cluster0`;
+const uri = `mongodb+srv://Admin:wmL3HZsLYuieRpNs@the-deadline-smasher.63ulfs6.mongodb.net/?appName=The-Deadline-Smasher`;
 
 // Export the URI
 export default uri;
