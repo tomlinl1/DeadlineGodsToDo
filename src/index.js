@@ -5,6 +5,8 @@ import methodOverride from 'method-override';
 import Post from './models/Post.js';
 import { getNextId } from './util/util.js';
 import uri from './util/uri.js';
+import userRoutes from "./routes/userRoutes.js";
+import achievementRoutes from "./routes/achievementRoutes.js";
 
 dotenv.config();
 
@@ -15,6 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static('public'));
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
+app.use("/api/users", userRoutes);
+app.use("/api/achievements", achievementRoutes);
 
 // Connect to MongoDB using Mongoose
 async function connectDB() {
