@@ -11,7 +11,7 @@ const achievementSchema = new mongoose.Schema({
   },
   points: { type: Number, required: true }
 },
-{ collection: "achievements" });
+{ collection: "global_achievements" });
 
 //module.exports = mongoose.model("Achievement", achievementSchema);
 export default mongoose.model("Achievement", achievementSchema);

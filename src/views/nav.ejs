@@ -49,11 +49,11 @@ let achievementsData = [];
 // Fetch achievements by user_id
 async function fetchAchievementsByUsername(username) {
   try {
-    const userRes = await fetch(`http://localhost:5000/api/users?user_id=${encodeURIComponent(username)}`);
+    const userRes = await fetch(`http://localhost:5500/api/users?user_id=${encodeURIComponent(username)}`);
     if (!userRes.ok) throw new Error("User not found");
     const user = await userRes.json();
 
-    const achievementsRes = await fetch(`http://localhost:5000/api/achievements/${user._id}`);
+    const achievementsRes = await fetch(`http://localhost:5500/api/achievements/${user._id}`);
     if (!achievementsRes.ok) throw new Error("Could not fetch achievements");
     achievementsData = await achievementsRes.json();
 
