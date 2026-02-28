@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  
+
+    <title>Calender</title>
+
+</head>
+<body>
+    <%- include('nav.ejs') %>
+    <h1>Calendar</h1>
+    
+</body>
+</html>
+
+<!-- What am I looking for in a calender? 
+- Show full month
+- Each day can contain a list of tasks
+    - Limit to 3 or so shown tasks in the box
+-  switch between months (1 month before and up to 3 months after)
+- Click on a day to show all tasks for that day in a modal
+- Click on a task to go to that task
+-->
+
+<!-- Calendar framework
+- calendar div
+    - rows and columns (7 x 6 the days in the calendar that are not apart of the month will have their numbers grayed out)
+    - use JS to generate the proper days of the month
+    - create cells for eachday 
+
+        LAYOUT OF CELLS
+        - each cell will be numbered and have a box in them that shows the title of the task 
+            - colors can be a setting or priority level thing
+            - there can be a max of 3 tasks shown within one cell (if there are more there will be an icon to indicate that)
+            - the order of tasks is determined by 
+                - is there an extended task to show
+                - priority level
+                
+        EVENTS 
+        - clicking on the cell without clicking on a task will show all tasks for that day in a modal
+        - clicking on a task will go to that task (depending on how we implement tasks, there may be a link to the task)
+            - (if there is no task to link to then we can just show the task details in a modal as well)
+            - for now it will just be a modal with the title, date, and priority of the task  
+-->
+
+
+<!-- Calendar task model
+- id
+- start date
+- end date (if null, then just a single day event) 
+- name of task
+- priority (1-3)
+- link to task (null for now, will implement later)
+-->
