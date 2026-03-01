@@ -10,8 +10,21 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
   date: {
-    type: String,
+    type: Date,
     required: true,
+  },
+  tags: {
+    type: [String],
+    default: [],
+  },
+  priority: {
+    type: String,
+    enum: ['low', 'medium', 'high'],
+    default: 'medium',
+  },
+  completed: {
+    type: Boolean,
+    default: false,
   },
 });
 
