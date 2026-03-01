@@ -1,16 +1,19 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
+  <a class="navbar-brand" href="#">The Deadline Crusher</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
     aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/list">List</a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="/list">List <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="#" id="openAchievements">Achievements <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/calendar">Calendar</a>
@@ -18,3 +21,96 @@
     </ul>
   </div>
 </nav>
+
+<!-- Achievements Modal (global) -->
+<div class="modal fade" id="achievementsModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content" style="height: 70vh; max-height: 70vh;">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title">Achievements</h5>
+          <p class="mb-0" style="font-size: 0.9rem;">
+            <span class="filter" data-type="all">All</span>
+            <span class="filter" data-type="profile">Profile</span>
+            <span class="filter" data-type="streak">Streak</span>
+            <span class="filter" data-type="tasks">Tasks</span>
+          </p>
+        </div>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div id="achievementModalBody" class="modal-body">
+        <!-- Achievements will load here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+let achievementsData = [];
+
+// Fetch achievements by user_id
+async function fetchAchievementsByUsername(username) {
+  try {
+    const userRes = await fetch(`http://localhost:5500/api/users?user_id=${encodeURIComponent(username)}`);
+    if (!userRes.ok) throw new Error("User not found");
+    const user = await userRes.json();
+
+    const achievementsRes = await fetch(`http://localhost:5500/api/achievements/${user._id}`);
+    if (!achievementsRes.ok) throw new Error("Could not fetch achievements");
+    achievementsData = await achievementsRes.json();
+
+    renderAchievements("all");
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+}
+
+function renderAchievements(type) {
+  const container = document.getElementById('achievementModalBody');
+  container.innerHTML = "";
+
+  let filtered = (type === "all")
+    ? achievementsData
+    : achievementsData.filter(a => a.category && a.category.toLowerCase() === type.toLowerCase());
+
+  let counter = 1;
+  filtered.forEach(a => {
+    const achieveDiv = document.createElement('div');
+    achieveDiv.setAttribute('data-bs-toggle', 'collapse');
+    achieveDiv.setAttribute('data-bs-target', `#achievement${counter}`);
+    achieveDiv.innerText = a.name;
+
+    const collapseDiv = document.createElement('div');
+    collapseDiv.id = `achievement${counter}`;
+    collapseDiv.classList.add('collapse');
+
+    const card = document.createElement('div');
+    card.classList.add('card', 'card-body');
+    card.innerText = a.description;
+
+    collapseDiv.appendChild(card);
+    container.appendChild(achieveDiv);
+    container.appendChild(collapseDiv);
+
+    counter++;
+  });
+}
+
+// Open achievements modal
+document.getElementById("openAchievements").addEventListener("click", () => {
+  const username = 'name'; // hardcoded for now
+  fetchAchievementsByUsername(username).then(() => {
+    const modal = new bootstrap.Modal(document.getElementById('achievementsModal'));
+    modal.show();
+  });
+});
+
+// Filters
+document.querySelectorAll(".filter").forEach(span => {
+  span.addEventListener("click", () => {
+    renderAchievements(span.getAttribute("data-type"));
+  });
+});
+</script>

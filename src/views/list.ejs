@@ -10,44 +10,231 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
 
-  <title>Document</title>
+  <title>Task List - The Deadline Crusher</title>
+  <style>
+    .smart-nav .btn { margin-right: 5px; margin-bottom: 5px; }
+    .filter-panel { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+    .pinned-badge { font-size: 0.75rem; }
+    .overdue { border-left: 4px solid #dc3545; }
+    .due-today { border-left: 4px solid #ffc107; }
+    .upcoming { border-left: 4px solid #28a745; }
+    .saved-views-list .list-group-item { display: flex; justify-content: space-between; align-items: center; }
+  </style>
 </head>
 
 <body>
   <%- include('nav.ejs') %>
 
-    <ul class="list-group">
-      <% for (var i=0; i < posts.length; i++){ %>
-        <li class="list-group-item">
-          <h4> Title : <%= posts[i].title %>
-          </h4>
-          <p> Date : <%= posts[i].date %>
-          </p>
-          <p> Id : <%= posts[i]._id %>
-          </p>
-          <button class="delete" data-id="<%= posts[i]._id %>">Delete</button>
-        </li>
-        <% } %>
-    </ul>
+  <div class="container mt-4">
+    <h4><strong>Task List</strong></h4>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script>
-      $('.delete').click(function (e) {
-        $.ajax({
-          method: 'DELETE',
-          url: '/delete',
-          // dataset.id is from: data-id= posts[i]._id 
-          data: { _id: e.target.dataset.id }
-        }).done((res) => {  // we need this form to use $this 
-          $(this).parent('li').fadeOut();
-          console.log('killed')
-        }).fail((xhr, code, err) => {
-          // failure
-        });
+    <!-- Auto List Buttons -->
+    <div class="smart-nav mb-3">
+      <a href="/list?view=today" class="btn btn-outline-warning btn-sm <%= activeView === 'today' ? 'active' : '' %>">
+        Today
+      </a>
+      <a href="/list?view=upcoming" class="btn btn-outline-success btn-sm <%= activeView === 'upcoming' ? 'active' : '' %>">
+        Upcoming
+      </a>
+      <a href="/list?view=overdue" class="btn btn-outline-danger btn-sm <%= activeView === 'overdue' ? 'active' : '' %>">
+        Overdue
+      </a>
+      <a href="/list" class="btn btn-outline-secondary btn-sm <%= activeView === 'all' ? 'active' : '' %>">
+        All Tasks
+      </a>
+    </div>
+
+    <!-- Search Bar -->
+    <form method="GET" action="/list" class="mb-3">
+      <div class="input-group">
+        <input type="text" class="form-control" name="search" placeholder="Search tasks..."
+               value="<%= filters.search || '' %>" />
+        <!-- Preserve other filters -->
+        <input type="hidden" name="tag" value="<%= filters.tag || '' %>" />
+        <input type="hidden" name="priority" value="<%= filters.priority || '' %>" />
+        <input type="hidden" name="dateFrom" value="<%= filters.dateFrom || '' %>" />
+        <input type="hidden" name="dateTo" value="<%= filters.dateTo || '' %>" />
+        <input type="hidden" name="sortBy" value="<%= sortBy || 'date' %>" />
+        <input type="hidden" name="sortOrder" value="<%= sortOrder || 'asc' %>" />
+        <div class="input-group-append">
+          <button class="btn btn-outline-primary" type="submit">Search</button>
+        </div>
+      </div>
+    </form>
+
+    <!-- Filter Panel -->
+    <div class="filter-panel">
+      <form method="GET" action="/list" id="filterForm">
+        <div class="form-row align-items-end">
+          <div class="form-group col-md-2">
+            <label><small>Tag</small></label>
+            <select class="form-control form-control-sm" name="tag">
+              <option value="">All Tags</option>
+              <% allTags.forEach(function(tag) { %>
+                <option value="<%= tag %>" <%= filters.tag === tag ? 'selected' : '' %>><%= tag %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <label><small>Priority</small></label>
+            <select class="form-control form-control-sm" name="priority">
+              <option value="">All</option>
+              <option value="high" <%= filters.priority === 'high' ? 'selected' : '' %>>High</option>
+              <option value="medium" <%= filters.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+              <option value="low" <%= filters.priority === 'low' ? 'selected' : '' %>>Low</option>
+            </select>
+          </div>
+          <div class="form-group col-md-2">
+            <label><small>From Date</small></label>
+            <input type="date" class="form-control form-control-sm" name="dateFrom"
+                   value="<%= filters.dateFrom || '' %>" />
+          </div>
+          <div class="form-group col-md-2">
+            <label><small>To Date</small></label>
+            <input type="date" class="form-control form-control-sm" name="dateTo"
+                   value="<%= filters.dateTo || '' %>" />
+          </div>
+          <div class="form-group col-md-2">
+            <label><small>Sort By</small></label>
+            <select class="form-control form-control-sm" name="sortBy">
+              <option value="date" <%= sortBy === 'date' ? 'selected' : '' %>>Due Date</option>
+              <option value="title" <%= sortBy === 'title' ? 'selected' : '' %>>Title</option>
+              <option value="priority" <%= sortBy === 'priority' ? 'selected' : '' %>>Priority</option>
+            </select>
+          </div>
+          <div class="form-group col-md-1">
+            <label><small>Order</small></label>
+            <select class="form-control form-control-sm" name="sortOrder">
+              <option value="asc" <%= sortOrder === 'asc' ? 'selected' : '' %>>Asc</option>
+              <option value="desc" <%= sortOrder === 'desc' ? 'selected' : '' %>>Desc</option>
+            </select>
+          </div>
+          <div class="form-group col-md-1">
+            <input type="hidden" name="search" value="<%= filters.search || '' %>" />
+            <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+          </div>
+        </div>
+        <a href="/list" class="btn btn-link btn-sm p-0">Clear Filters</a>
+      </form>
+    </div>
+
+    <!-- Save Current View -->
+    <div class="mb-3">
+      <form method="POST" action="/list/views/save" class="form-inline">
+        <input type="hidden" name="tag" value="<%= filters.tag || '' %>" />
+        <input type="hidden" name="priority" value="<%= filters.priority || '' %>" />
+        <input type="hidden" name="dateFrom" value="<%= filters.dateFrom || '' %>" />
+        <input type="hidden" name="dateTo" value="<%= filters.dateTo || '' %>" />
+        <input type="hidden" name="search" value="<%= filters.search || '' %>" />
+        <input type="hidden" name="sortBy" value="<%= sortBy || 'date' %>" />
+        <input type="hidden" name="sortOrder" value="<%= sortOrder || 'asc' %>" />
+        <input type="text" class="form-control form-control-sm mr-2" name="viewName"
+               placeholder="View name..." required />
+        <button type="submit" class="btn btn-outline-success btn-sm">Save View</button>
+      </form>
+    </div>
+
+    <!-- Pinned / Saved Views -->
+    <% if (savedViews && savedViews.length > 0) { %>
+      <div class="mb-3">
+        <h6>Saved Views</h6>
+        <div class="saved-views-list list-group list-group-flush">
+          <% savedViews.forEach(function(view) { %>
+            <div class="list-group-item list-group-item-action py-1">
+              <a href="/list/views/<%= view._id %>/load">
+                <%= view.name %>
+                <% if (view.pinned) { %>
+                  <span class="badge badge-primary pinned-badge">Pinned</span>
+                <% } %>
+              </a>
+              <span>
+                <% if (!view.pinned) { %>
+                  <form method="POST" action="/list/views/<%= view._id %>/pin" style="display:inline;">
+                    <button type="submit" class="btn btn-outline-primary btn-sm py-0">Pin</button>
+                  </form>
+                <% } else { %>
+                  <form method="POST" action="/list/views/<%= view._id %>/unpin" style="display:inline;">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm py-0">Unpin</button>
+                  </form>
+                <% } %>
+                <form method="POST" action="/list/views/<%= view._id %>/delete?_method=DELETE" style="display:inline;">
+                  <button type="submit" class="btn btn-outline-danger btn-sm py-0">X</button>
+                </form>
+              </span>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <!-- Task Count -->
+    <p class="text-muted"><small><%= posts.length %> task(s) found</small></p>
+
+    <!-- Task List -->
+    <ul class="list-group">
+      <% if (posts.length === 0) { %>
+        <li class="list-group-item text-center text-muted">No tasks found.</li>
+      <% } %>
+      <% var now = new Date(); now.setHours(0,0,0,0); %>
+      <% posts.forEach(function(post) { %>
+        <%
+          var dueDate = new Date(post.date);
+          dueDate.setHours(0,0,0,0);
+          var isOverdue = dueDate < now && !post.completed;
+          var isToday = dueDate.getTime() === now.getTime();
+          var rowClass = isOverdue ? 'overdue' : isToday ? 'due-today' : 'upcoming';
+        %>
+        <li class="list-group-item <%= rowClass %>">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5>
+                <a href="/detail/<%= post._id %>">
+                  <% if (post.completed) { %><s><% } %>
+                  <%= post.title %>
+                  <% if (post.completed) { %></s><% } %>
+                </a>
+              </h5>
+              <p class="mb-1">
+                <small class="text-muted">
+                  Due: <%= dueDate.toLocaleDateString() %>
+                  <% if (isOverdue) { %> <span class="text-danger font-weight-bold">OVERDUE</span><% } %>
+                  <% if (isToday) { %> <span class="text-warning font-weight-bold">TODAY</span><% } %>
+                </small>
+              </p>
+              <p class="mb-0">
+                <span class="badge badge-<%= post.priority === 'high' ? 'danger' : post.priority === 'medium' ? 'warning' : 'info' %>">
+                  <%= post.priority || 'medium' %>
+                </span>
+                <% if (post.tags && post.tags.length > 0) { %>
+                  <% post.tags.forEach(function(tag) { %>
+                    <a href="/list?tag=<%= encodeURIComponent(tag) %>" class="badge badge-secondary"><%= tag %></a>
+                  <% }); %>
+                <% } %>
+              </p>
+            </div>
+            <div>
+              <a href="/edit/<%= post._id %>" class="btn btn-sm btn-outline-secondary">Edit</a>
+              <button class="delete btn btn-sm btn-outline-danger" data-id="<%= post._id %>">Delete</button>
+            </div>
+          </div>
+        </li>
+      <% }); %>
+    </ul>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script>
+    $('.delete').click(function (e) {
+      var btn = $(this);
+      $.ajax({
+        method: 'DELETE',
+        url: '/delete',
+        data: { _id: btn.data('id') }
+      }).done(function () {
+        btn.closest('li').fadeOut();
       });
-    </script>
+    });
+  </script>
 
 </body>
 
