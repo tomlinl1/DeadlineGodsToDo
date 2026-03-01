@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import methodOverride from 'method-override';
 import uri from './util/uri.js';
+import userRoutes from "./routes/userRoutes.js";
+import achievementRoutes from "./routes/achievementRoutes.js";
 import postRoutes from './routes/posts.js';
 import listRoutes from './routes/list.js';
 
@@ -15,6 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static('public'));
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
+app.use("/api/users", userRoutes);
+app.use("/api/achievements", achievementRoutes);
 
 // Routes
 app.use('/', postRoutes);
