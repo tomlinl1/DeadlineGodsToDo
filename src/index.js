@@ -39,4 +39,25 @@ async function start() {
   });
 }
 
+// API route - GET /listjson - Return posts as JSON
+app.get('/listjson', async function (req, res) {
+  try {
+    const posts = await Post.find({});
+    res.json(posts);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('Error fetching posts');
+  }
+});
+
+// GET /calender - Show calendar interface
+// show calendar page
+app.get('/calendar', function (req, res) {
+  try {
+    res.render('calendar.ejs');
+  } catch (e) {
+    console.error(e);
+    res.status(500).send('Error rendering calendar page');
+  }
+});
 await start();
