@@ -163,6 +163,7 @@ app.get('/listjson', async function (req, res) {
 });
 
 // GET /calender - Show calendar interface
+// show calendar page
 app.get('/calendar', function (req, res) {
   try {
     res.render('calendar.ejs');

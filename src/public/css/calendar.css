@@ -1,0 +1,22 @@
+/* Basic calendar styles */
+#calendar-body td {
+  height: 100px;
+  vertical-align: top;
+  padding: 6px;
+}
+
+/* show day number slightly bold */
+.calendar-day {
+  font-weight: 500;
+}
+
+/* muted cells for prev/next month (Bootstrap's text-muted already dims, this adds subtle bg) */
+.text-muted {
+  color: rgba(0,0,0,0.45) !important;
+  background-color: #f8f9fa;
+}
+
+/* indicate hover for clickable days */
+.calendar-day:hover {
+  background-color: rgba(0,0,0,0.03);
+}
