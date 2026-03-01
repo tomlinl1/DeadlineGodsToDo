@@ -5,6 +5,37 @@
   padding: 6px;
 }
 
+.day-number {
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.tasks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.task-box {
+  padding: 3px 5px;
+  border-radius: 2px;
+  font-size: 0.7rem;
+  background-color: #a9a9a9;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid #808080;
+}
+
+.task-box:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}
+
 /* show day number slightly bold */
 .calendar-day {
   font-weight: 500;
