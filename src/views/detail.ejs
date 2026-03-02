@@ -21,7 +21,10 @@
             <%= data.title %>
           </h5>
           <h6 class="card-subtitle mb-2 text-muted">
-            <%= data.date %>
+            <% var d = new Date(data.date); %>
+            <% var datePart = (d.getMonth() + 1) + '/' + d.getDate() + '/' + String(d.getFullYear()).slice(2); %>
+            <% var timePart = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }); %>
+            <%= datePart %> <%= timePart %>
           </h6>
 
           <form action="/edit/<%= data._id %>" method="GET">
