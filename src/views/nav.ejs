@@ -12,11 +12,14 @@
       <li class="nav-item">
         <a class="nav-link" href="/list">List</a>
       </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#" id="openAchievements">Achievements <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="openAchievements">Achievements</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/calendar">Calendar</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">login</a>
       </li>
     </ul>
   </div>
@@ -100,7 +103,7 @@ function renderAchievements(type) {
 
 // Open achievements modal
 document.getElementById("openAchievements").addEventListener("click", () => {
-  const username = 'name'; // hardcoded for now
+  const username = localStorage.getItem("username"); // hardcoded for now
   fetchAchievementsByUsername(username).then(() => {
     const modal = new bootstrap.Modal(document.getElementById('achievementsModal'));
     modal.show();
