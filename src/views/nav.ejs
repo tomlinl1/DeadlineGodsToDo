@@ -1,3 +1,6 @@
+<head>
+  <link rel="stylesheet" href="../public/css/styles.css">
+</head>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">The Deadline Crusher</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
@@ -20,6 +23,9 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/login">login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/customize">Customize</a>
       </li>
     </ul>
   </div>
@@ -116,4 +122,15 @@ document.querySelectorAll(".filter").forEach(span => {
     renderAchievements(span.getAttribute("data-type"));
   });
 });
+</script>
+
+<script>
+  (function(){
+    const savedFont = localStorage.getItem("siteFont");
+
+    if(savedFont){
+      document.documentElement.style.setProperty("--site-font", savedFont);
+    }
+
+  })();
 </script>

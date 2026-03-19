@@ -74,3 +74,13 @@ app.get("/login", (req, res) => {
   }
 });
 await start();
+
+// GET /customize - shows customization page
+app.get("/customize", (req, res) => {
+  try {
+    res.render("customize");
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Error loading customize page");
+  }
+});
