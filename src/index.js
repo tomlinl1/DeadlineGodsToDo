@@ -7,18 +7,21 @@ import userRoutes from "./routes/userRoutes.js";
 import achievementRoutes from "./routes/achievementRoutes.js";
 import postRoutes from './routes/posts.js';
 import listRoutes from './routes/list.js';
+import loginRoutes from "./routes/loginRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
 // Middleware
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static('public'));
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 app.use("/api/users", userRoutes);
 app.use("/api/achievements", achievementRoutes);
+app.use("/api", loginRoutes);
 
 // Routes
 app.use('/', postRoutes);
@@ -60,4 +63,24 @@ app.get('/calendar', function (req, res) {
     res.status(500).send('Error rendering calendar page');
   }
 });
+
+// GET /login - shows login page
+app.get("/login", (req, res) => {
+  try {
+    res.render("login");
+  } catch (e) {
+    console.error(e)
+    res.status(500).send('Error opening login page')
+  }
+});
 await start();
+
+// GET /customize - shows customization page
+app.get("/customize", (req, res) => {
+  try {
+    res.render("customize");
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Error loading customize page");
+  }
+});
