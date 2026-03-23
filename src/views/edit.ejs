@@ -16,81 +16,38 @@
 
 <body>
 
-  <%- include('nav.ejs') %>
-
-  <div class="container mt-4">
-
-    <h4 class="mb-3"><strong>Edit Task</strong></h4>
-
-    <!-- Card Wrapper -->
-    <div class="card shadow-sm">
-      <div class="card-body">
-
-        <form action="/edit?_method=PUT" method="POST">
-
-          <!-- Hidden ID -->
-          <input type="hidden" name="id" value="<%= data._id %>">
-
-          <!-- Title -->
-          <div class="mb-3">
-            <label class="form-label">Task Title</label>
-            <input 
-              type="text" 
-              class="form-control" 
-              name="title" 
-              value="<%= data.title %>" 
-              required 
-            />
-          </div>
-
-          <!-- Date -->
-          <div class="mb-3">
-            <label class="form-label">Due Date</label>
-            <input 
-              type="date" 
-              class="form-control" 
-              name="date" 
-              value="<%= data.date ? new Date(data.date).toISOString().split('T')[0] : '' %>" 
-              required 
-            />
-          </div>
-
-          <!-- Priority -->
-          <div class="mb-3">
-            <label class="form-label">Priority</label>
-            <select class="form-select" name="priority">
-              <option value="low" <%= data.priority === 'low' ? 'selected' : '' %>>Low</option>
-              <option value="medium" <%= data.priority === 'medium' ? 'selected' : '' %>>Medium</option>
-              <option value="high" <%= data.priority === 'high' ? 'selected' : '' %>>High</option>
-            </select>
-          </div>
-
-          <!-- Tags -->
-          <div class="mb-3">
-            <label class="form-label">Tags (comma-separated)</label>
-            <input 
-              type="text" 
-              class="form-control" 
-              name="tags" 
-              value="<%= data.tags ? data.tags.join(', ') : '' %>" 
-              placeholder="e.g. homework, math, exam" 
-            />
-          </div>
-
-          <!-- Buttons -->
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-              Save Changes
-            </button>
-
-            <a href="/list" class="btn btn-outline-secondary">
-              Cancel
-            </a>
-          </div>
-
-        </form>
-
-      </div>
+    <div class="container mt-3">
+      <form action="/edit?_method=PUT" method="POST">
+        <input value="<%= data._id %>" name="id" style="display : none">
+        <div class="form-group">
+          <label>Task Title</label>
+          <input type="text" class="form-control" name="title" value="<%= data.title %>" required />
+        </div>
+        <% var _d = data.date ? new Date(data.date) : null; %>
+        <% var _dateVal = _d ? (_d.getFullYear() + '-' + String(_d.getMonth()+1).padStart(2,'0') + '-' + String(_d.getDate()).padStart(2,'0')) : ''; %>
+        <% var _timeVal = _d ? (String(_d.getHours()).padStart(2,'0') + ':' + String(_d.getMinutes()).padStart(2,'0')) : ''; %>
+        <div class="form-group">
+          <label>Due Date</label>
+          <input type="date" class="form-control" name="date" value="<%= _dateVal %>" required />
+        </div>
+        <div class="form-group">
+          <label>Due Time <small class="text-muted">(optional)</small></label>
+          <input type="time" class="form-control" name="time" value="<%= _timeVal %>" />
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select class="form-control" name="priority">
+            <option value="low" <%= data.priority === 'low' ? 'selected' : '' %>>Low</option>
+            <option value="medium" <%= data.priority === 'medium' ? 'selected' : '' %>>Medium</option>
+            <option value="high" <%= data.priority === 'high' ? 'selected' : '' %>>High</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tags (comma-separated)</label>
+          <input type="text" class="form-control" name="tags" value="<%= data.tags ? data.tags.join(', ') : '' %>" placeholder="e.g. homework, math, exam" />
+        </div>
+        <button type="submit" class="btn btn-outline-secondary">Submit</button>
+      </form>
     </div>
 
   </div>

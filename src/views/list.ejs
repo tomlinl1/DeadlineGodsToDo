@@ -156,23 +156,17 @@
           </div>
         </div>
       <% } %>
-
-      <!-- Count -->
-      <p class="text-muted"><small><%= posts.length %> task(s) found</small></p>
-
-      <!-- Tasks -->
-      <ul class="list-group">
-        <% if (posts.length === 0) { %>
-          <li class="list-group-item text-center text-muted">No tasks found.</li>
-        <% } %>
-
-        <% var now = new Date(); now.setHours(0,0,0,0); %>
-
-        <% posts.forEach(post => { 
-          var dueDate = new Date(post.date);
-          dueDate.setHours(0,0,0,0);
-          var isOverdue = dueDate < now && !post.completed;
-          var isToday = dueDate.getTime() === now.getTime();
+      <% var now = new Date(); %>
+      <% posts.forEach(function(post) { %>
+        <%
+          var _due = new Date(post.date);
+          var dueIso = _due.getFullYear() + '-' + String(_due.getMonth()+1).padStart(2,'0') + '-' + String(_due.getDate()).padStart(2,'0');
+          var dueParts = dueIso.split('-');
+          var dueDisplay = dueParts[1] + '/' + dueParts[2] + '/' + dueParts[0].slice(2);
+          var dueTime = _due.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+          var todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+          var isOverdue = dueIso < todayStr && !post.completed;
+          var isToday = dueIso === todayStr;
           var rowClass = isOverdue ? 'overdue' : isToday ? 'due-today' : 'upcoming';
         %>
 
@@ -187,15 +181,15 @@
                   <% if (post.completed) { %></s><% } %>
                 </a>
               </h5>
-
-              <small class="text-muted">
-                Due: <%= dueDate.toLocaleDateString() %>
-                <% if (isOverdue) { %> <span class="text-danger fw-bold">OVERDUE</span><% } %>
-                <% if (isToday) { %> <span class="text-warning fw-bold">TODAY</span><% } %>
-              </small>
-
-              <div class="mt-1">
-                <span class="badge bg-<%= post.priority === 'high' ? 'danger' : post.priority === 'medium' ? 'warning' : 'info' %>">
+              <p class="mb-1">
+                <small class="text-muted">
+                  Due: <%= dueDisplay %> at <%= dueTime %>
+                  <% if (isOverdue) { %> <span class="text-danger font-weight-bold">OVERDUE</span><% } %>
+                  <% if (isToday) { %> <span class="text-warning font-weight-bold">TODAY</span><% } %>
+                </small>
+              </p>
+              <p class="mb-0">
+                <span class="badge badge-<%= post.priority === 'high' ? 'danger' : post.priority === 'medium' ? 'warning' : 'info' %>">
                   <%= post.priority || 'medium' %>
                 </span>
 

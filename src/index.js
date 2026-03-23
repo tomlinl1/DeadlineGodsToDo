@@ -1,12 +1,13 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import methodOverride from 'method-override';
-import uri from './util/uri.js';
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import methodOverride from "method-override";
+import uri from "./util/uri.js";
 import userRoutes from "./routes/userRoutes.js";
 import achievementRoutes from "./routes/achievementRoutes.js";
-import postRoutes from './routes/posts.js';
-import listRoutes from './routes/list.js';
+import postRoutes from "./routes/posts.js";
+import listRoutes from "./routes/list.js";
+import Post from "./models/Post.js";
 import loginRoutes from "./routes/loginRoutes.js";
 
 dotenv.config();
@@ -16,51 +17,51 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/public', express.static('public'));
-app.use(methodOverride('_method'));
-app.set('view engine', 'ejs');
+app.use("/public", express.static("public"));
+app.use(methodOverride("_method"));
+app.set("view engine", "ejs");
 app.use("/api/users", userRoutes);
 app.use("/api/achievements", achievementRoutes);
 app.use("/api", loginRoutes);
 
 // Routes
-app.use('/', postRoutes);
-app.use('/list', listRoutes);
+app.use("/", postRoutes);
+app.use("/list", listRoutes);
 
 // Connect to MongoDB and start server
 async function start() {
   try {
     await mongoose.connect(uri);
-    console.log('MongoDB connected successfully');
+    console.log("MongoDB connected successfully");
   } catch (err) {
-    console.error('MongoDB connection error:', err);
+    console.error("MongoDB connection error:", err);
     process.exit(1);
   }
 
   app.listen(5500, () => {
-    console.log('Server listening on port 5500');
+    console.log("Server listening on port 5500");
   });
 }
 
 // API route - GET /listjson - Return posts as JSON
-app.get('/listjson', async function (req, res) {
+app.get("/listjson", async function (req, res) {
   try {
     const posts = await Post.find({});
     res.json(posts);
   } catch (e) {
     console.error(e);
-    res.status(500).send('Error fetching posts');
+    res.status(500).send("Error fetching posts");
   }
 });
 
 // GET /calender - Show calendar interface
 // show calendar page
-app.get('/calendar', function (req, res) {
+app.get("/calendar", function (req, res) {
   try {
-    res.render('calendar.ejs');
+    res.render("calendar.ejs");
   } catch (e) {
     console.error(e);
-    res.status(500).send('Error rendering calendar page');
+    res.status(500).send("Error rendering calendar page");
   }
 });
 
