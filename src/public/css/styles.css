@@ -1,0 +1,7 @@
+:root{
+  --site-font: Arial;
+}
+
+*{
+  font-family: var(--site-font);
+}

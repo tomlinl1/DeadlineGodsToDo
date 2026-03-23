@@ -1,3 +1,6 @@
+<head>
+  <link rel="stylesheet" href="../public/css/styles.css">
+</head>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">The Deadline Crusher</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
@@ -12,11 +15,17 @@
       <li class="nav-item">
         <a class="nav-link" href="/list">List</a>
       </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="#" id="openAchievements">Achievements <span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="openAchievements">Achievements</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/calendar">Calendar</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/customize">Customize</a>
       </li>
     </ul>
   </div>
@@ -100,7 +109,7 @@ function renderAchievements(type) {
 
 // Open achievements modal
 document.getElementById("openAchievements").addEventListener("click", () => {
-  const username = 'name'; // hardcoded for now
+  const username = localStorage.getItem("username"); // hardcoded for now
   fetchAchievementsByUsername(username).then(() => {
     const modal = new bootstrap.Modal(document.getElementById('achievementsModal'));
     modal.show();
@@ -113,4 +122,15 @@ document.querySelectorAll(".filter").forEach(span => {
     renderAchievements(span.getAttribute("data-type"));
   });
 });
+</script>
+
+<script>
+  (function(){
+    const savedFont = localStorage.getItem("siteFont");
+
+    if(savedFont){
+      document.documentElement.style.setProperty("--site-font", savedFont);
+    }
+
+  })();
 </script>
