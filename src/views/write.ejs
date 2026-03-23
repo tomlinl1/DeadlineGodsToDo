@@ -7,74 +7,59 @@
 
   <!-- Bootstrap 5.3.8 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/styles.css">
 
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="/public/css/styles.css">
 
   <title>Write Task</title>
 </head>
 
 <body>
-
   <%- include('nav.ejs') %>
 
   <div class="container mt-4">
+    <h4><strong>Write Page</strong></h4>
 
-    <h4 class="mb-3"><strong>Write Page</strong></h4>
+    <div class="container mt-3">
+      <form action="/add" method="POST">
 
-    <!-- Card Wrapper -->
-    <div class="card shadow-sm">
-      <div class="card-body">
+        <!-- Task Title -->
+        <div class="mb-3">
+          <label class="form-label">Task Title</label>
+          <input type="text" class="form-control" name="title" required>
+        </div>
 
-        <form action="/add" method="POST">
+        <!-- Due Date -->
+        <div class="mb-3">
+          <label class="form-label">Due Date</label>
+          <input type="date" class="form-control" name="date" required>
+        </div>
 
-          <!-- Title -->
-          <div class="mb-3">
-            <label class="form-label">Task Title</label>
-            <input type="text" class="form-control" name="title" required />
-          </div>
+        <!-- Priority -->
+        <div class="mb-3">
+          <label class="form-label">Priority</label>
+          <select class="form-select" name="priority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
 
-          <!-- Date -->
-          <div class="mb-3">
-            <label class="form-label">Due Date</label>
-            <input type="date" class="form-control" name="date" required />
-          </div>
+        <!-- Tags -->
+        <div class="mb-3">
+          <label class="form-label">Tags (comma-separated)</label>
+          <input type="text" class="form-control" name="tags" placeholder="e.g. homework, math, exam">
+        </div>
 
-          <!-- Priority -->
-          <div class="mb-3">
-            <label class="form-label">Priority</label>
-            <select class="form-select" name="priority">
-              <option value="low">Low</option>
-              <option value="medium" selected>Medium</option>
-              <option value="high">High</option>
-            </select>
-          </div>
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-outline-secondary">Submit</button>
 
-          <!-- Tags -->
-          <div class="mb-3">
-            <label class="form-label">Tags (comma-separated)</label>
-            <input 
-              type="text" 
-              class="form-control" 
-              name="tags" 
-              placeholder="e.g. homework, math, exam" 
-            />
-          </div>
-
-          <!-- Submit -->
-          <button type="submit" class="btn btn-primary">
-            Add Task
-          </button>
-
-        </form>
-
-      </div>
+      </form>
     </div>
-
   </div>
 
-  <!-- Bootstrap JS (no jQuery needed) -->
+  <!-- Bootstrap 5 JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

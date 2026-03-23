@@ -9,25 +9,12 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Your custom CSS -->
-  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/public/css/styles.css">
 
   <title>Task Details</title>
 </head>
 
 <body>
-  <%- include('nav.ejs') %>
-    <div class="container mt-3">
-      <div class="card" style="width: 100%">
-        <div class="card-body">
-          <h5 class="card-title">
-            <%= data.title %>
-          </h5>
-          <h6 class="card-subtitle mb-2 text-muted">
-            <% var d = new Date(data.date); %>
-            <% var datePart = (d.getMonth() + 1) + '/' + d.getDate() + '/' + String(d.getFullYear()).slice(2); %>
-            <% var timePart = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }); %>
-            <%= datePart %> <%= timePart %>
-          </h6>
 
   <%- include('nav.ejs') %>
 
@@ -37,44 +24,46 @@
       <div class="card-body">
 
         <!-- Title -->
-        <h4 class="card-title mb-2">
+        <h4 class="card-title mb-3">
           <%= data.title %>
         </h4>
 
-        <!-- Date -->
-        <p class="text-muted mb-3">
-          Due: <%= new Date(data.date).toLocaleDateString() %>
-        </p>
+        <!-- Due Date + Time -->
+        <% if (data.date) { %>
+          <% 
+            const d = new Date(data.date);
+            const datePart = d.toLocaleDateString('en-US');
+            const timePart = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+          %>
+          <p class="text-muted mb-3">
+            Due: <%= datePart %> at <%= timePart %>
+          </p>
+        <% } else { %>
+          <p class="text-muted mb-3">No due date set</p>
+        <% } %>
 
-        <!-- Optional: Priority -->
+        <!-- Priority -->
         <% if (data.priority) { %>
-          <p>
+          <p class="mb-3">
             <span class="badge bg-<%= data.priority === 'high' ? 'danger' : data.priority === 'medium' ? 'warning' : 'info' %>">
               <%= data.priority %>
             </span>
           </p>
         <% } %>
 
-        <!-- Optional: Tags -->
+        <!-- Tags -->
         <% if (data.tags && data.tags.length > 0) { %>
           <div class="mb-3">
             <% data.tags.forEach(tag => { %>
-              <span class="badge bg-secondary"><%= tag %></span>
+              <span class="badge bg-secondary me-1"><%= tag %></span>
             <% }) %>
           </div>
         <% } %>
 
         <!-- Actions -->
         <div class="d-flex gap-2">
-
-          <a href="/edit/<%= data._id %>" class="btn btn-primary">
-            Edit Task
-          </a>
-
-          <a href="/list" class="btn btn-outline-secondary">
-            Back to List
-          </a>
-
+          <a href="/edit/<%= data._id %>" class="btn btn-primary">Edit Task</a>
+          <a href="/list" class="btn btn-outline-secondary">Back to List</a>
         </div>
 
       </div>
@@ -82,7 +71,7 @@
 
   </div>
 
-  <!-- Bootstrap JS -->
+  <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

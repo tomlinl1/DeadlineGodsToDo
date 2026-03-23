@@ -1,6 +1,6 @@
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="public/css/styles.css">
+  <link rel="stylesheet" href="/public/css/styles.css">
 </head>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -116,7 +116,7 @@ function renderAchievements(type) {
 
 // Open achievements modal
 document.getElementById("openAchievements").addEventListener("click", () => {
-  const username = localStorage.getItem("username"); // hardcoded for now
+  const username = localStorage.getItem("username");
   fetchAchievementsByUsername(username).then(() => {
     const modal = new bootstrap.Modal(document.getElementById('achievementsModal'));
     modal.show();
