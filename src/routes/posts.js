@@ -9,13 +9,14 @@ router.get("/", (req, res) => {
   res.render("write.ejs");
 });
 
-// POST /add - Create a new task
+// POST /add - Create a new task (fixed)
 router.post("/add", async (req, res) => {
   try {
+    const dateStr = `${req.body.date}T00:00:00`; // treat as local midnight
     const newPost = new Post({
       _id: await getNextId(),
       title: req.body.title,
-      date: new Date(req.body.date),
+      date: new Date(dateStr),
       priority: req.body.priority || "medium",
       tags: parseTags(req.body.tags),
     });
