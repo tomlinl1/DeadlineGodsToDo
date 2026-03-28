@@ -29,7 +29,10 @@ router.post("/login", async (req, res) => {
         user_id,
         achievements: userAchievements,
         total_points: 0,
-        total_tasks: 0
+        total_tasks: 0,
+        customization: {
+          font: "Arial"
+        }
       });
 
       await user.save();

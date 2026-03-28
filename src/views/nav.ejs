@@ -27,6 +27,9 @@
       </ul>
     </div>
   </div>
+  <button onclick="completeAchievement('ach_03')">
+    Complete Ach 03
+  </button>
 </nav>
 
 <!-- ✅ Bootstrap 5 Modal -->
@@ -140,4 +143,22 @@ document.querySelectorAll(".filter").forEach(span => {
     }
 
   })();
+</script>
+
+<script>
+  async function completeAchievement(achievementId) {
+  const userId = localStorage.getItem("username");
+
+  const res = await fetch(
+    `/api/achievements/${userId}/complete/${achievementId}`,
+    {
+      method: "POST"
+    }
+  );
+
+  const data = await res.json();
+
+  console.log("Achievement updated:", data);
+  alert("Achievement completed!");
+}
 </script>
