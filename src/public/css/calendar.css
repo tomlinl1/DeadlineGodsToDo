@@ -1,6 +1,13 @@
 /* Basic calendar styles */
+#calendar-body {
+  table-layout: fixed;
+  width: 100%;
+}
+
 #calendar-body td {
   height: 100px;
+  width: 100px;
+  overflow: hidden;
   vertical-align: top;
   padding: 6px;
 }
@@ -17,23 +24,6 @@
   gap: 2px;
   flex: 1;
   overflow-y: auto;
-}
-
-.task-box {
-  padding: 3px 5px;
-  border-radius: 2px;
-  font-size: 0.7rem;
-  background-color: #a9a9a9;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border: 1px solid #808080;
-}
-
-.task-box:hover {
-  opacity: 0.85;
-  cursor: pointer;
 }
 
 /* show day number slightly bold */

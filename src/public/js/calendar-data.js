@@ -1,7 +1,9 @@
 // Mock calendar tasks for local development. This file is intentionally
 // a client-side JS file that sets `window.CALENDAR_TASKS` so it can be
 // swapped out later with a fetch to a real API without touching server code.
-// Each task: { id, startDate (ISO YYYY-MM-DD), endDate (ISO or null), name, priority (1-3), link }
+// Each task: { taskID, userID, startDate (ISO YYYY-MM-DD), endDate (ISO or null), name, priority (1-3), link }
+
+// data needs to be restructured to fit above
 
 window.CALENDAR_TASKS = [
   { id: 1, startDate: '2026-02-02', endDate: null, name: 'Read Chapter 3', priority: 2, link: null },
