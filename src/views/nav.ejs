@@ -162,3 +162,29 @@ document.querySelectorAll(".filter").forEach(span => {
   alert("Achievement completed!");
 }
 </script>
+
+<script>
+(function () {
+
+  const username = localStorage.getItem("username");
+
+  if (!username) return;
+
+  async function applySavedFont() {
+    try {
+      const res = await fetch(`/api/users?user_id=${username}`);
+      const user = await res.json();
+
+      const font = user.customization?.font || "Arial";
+
+      document.documentElement.style.setProperty("--site-font", font);
+
+    } catch (err) {
+      console.error("Failed to apply global font:", err);
+    }
+  }
+
+  applySavedFont();
+
+})();
+</script>
