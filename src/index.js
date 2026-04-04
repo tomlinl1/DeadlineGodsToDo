@@ -7,6 +7,7 @@ import userRoutes from "./routes/userRoutes.js";
 import achievementRoutes from "./routes/achievementRoutes.js";
 import postRoutes from './routes/posts.js';
 import listRoutes from './routes/list.js';
+import calendarRoutes from "./routes/calendarRoutes.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(methodOverride('_method'));
 app.set('view engine', 'ejs');
 app.use("/api/users", userRoutes);
 app.use("/api/achievements", achievementRoutes);
+app.use("/api/calendar", calendarRoutes);
 
 // Routes
 app.use('/', postRoutes);

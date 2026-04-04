@@ -5,6 +5,7 @@ const monthNames = [
 
 let currentDate = new Date(); // current date
 
+window.CURRENT_USER_ID = 1 // for testing
 
 const calendarBody = document.getElementById('calendar-body');
 const prevBtn = document.getElementById('prev-month');
@@ -12,10 +13,12 @@ const nextBtn = document.getElementById('next-month');
 
 // Starting logic
 (function () {
-	document.addEventListener('DOMContentLoaded', () => {
+	document.addEventListener('DOMContentLoaded', async 	() => {
 		prevBtn.addEventListener('click', () => changeMonth(-1));
 		nextBtn.addEventListener('click', () => changeMonth(1));
+		await fetchCalendarTasks(1); // fetch tasks for current user
 		renderCalendar(currentDate);
+		
 	});
 })();
 
@@ -73,48 +76,65 @@ function renderCalendar(date) {
 	renderTasks();
 }
 
+
 function renderTasks() {
-	if (!window.CALENDAR_TASKS || !window.calendarCells) return; // safety check
+    if (!window.CALENDAR_TASKS || !window.calendarCells) return; // safety check
 
-	const tasks = window.CALENDAR_TASKS.slice().sort((a, b) => b.priority - a.priority); // sort by priority descending
-	const cells = window.calendarCells;
-	const taskLimit = 3; 
+    const tasks = window.CALENDAR_TASKS.slice().sort((a, b) => b.priority - a.priority); // sort by priority descending
+    const cells = window.calendarCells;
+    const taskLimit = 3; 
 
-	tasks.forEach(task => {
-		const startDate = task.startDate.slice(0, 10);
-		const endDate = task.endDate ? task.endDate.slice(0, 10) : startDate;
-		const startCell = cells.find(c => c.dataset.date === startDate);
+    tasks.forEach(task => {
+        const startDate = task.start_date.slice(0, 10);
+        const endDate = task.end_date ? task.end_date.slice(0, 10) : startDate;
+        const startCell = cells.find(c => c.dataset.date === startDate);
 
-		const startIndex = cells.findIndex(c => c.dataset.date === startDate);
-		if (startIndex === -1) return; // task starts outside calendar range
-		
-		const endIndex = cells.findIndex(c => c.dataset.date === endDate);
-		const actualEndIdx = (endIndex === -1) ? startIndex : endIndex;
+        const startIndex = cells.findIndex(c => c.dataset.date === startDate);
+        if (startIndex === -1) return; // task starts outside calendar range
+        
+        const endIndex = cells.findIndex(c => c.dataset.date === endDate);
+        const actualEndIdx = (endIndex === -1) ? startIndex : endIndex;
 
-		let canRender = true;
-		//
-		// Todo: Check if any cell in the task's date range has reached the task limit
-		//
-		if (!canRender) return; // if any cell in range is full, skip rendering this task
+        let canRender = true;
+        //
+        // Todo: Check if any cell in the task's date range has reached the task limit
+        //
+        if (!canRender) return; // if any cell in range is full, skip rendering this task
 
-		const taskDiv = document.createElement('div');
-		//
-		// Todo: Create a better html structure for the task (e.g., include priority color, link if available, etc.)
-		//
-		taskDiv.className = 'task';
-		taskDiv.title = task.name;
-		taskDiv.style.cursor = 'pointer';
-		taskDiv.dataset.taskId = task.id; // store task ID for potential future use (e.g., click handler)
-		taskDiv.textContent = task.name;
+        const taskDiv = document.createElement('div');
+        //
+        // Todo: Create a better html structure for the task (e.g., include priority color, link if available, etc.)
+        //
+        taskDiv.className = 'task';
+        taskDiv.title = task.title;
+        taskDiv.style.cursor = 'pointer';
+        taskDiv.dataset.taskId = task.task_id; // store task ID for potential future use (e.g., click handler)
+        taskDiv.textContent = task.title;
 
-		const taskContainer = cells[startIndex].querySelector('.tasks-container');
-		taskContainer.appendChild(taskDiv);
-	})
-	
+        const taskContainer = cells[startIndex].querySelector('.tasks-container');
+        taskContainer.appendChild(taskDiv);
+    })
+    
 
 }
+
 
 function changeMonth(offset) {
 	currentDate.setMonth(currentDate.getMonth() + offset);
 	renderCalendar(currentDate);
+}
+
+async function fetchCalendarTasks(userId) {
+	try {
+		const response = await fetch(`/api/calendar/${userId}`);
+		if (!response.ok) {
+			throw new Error(`Error fetching tasks: ${response.statusText}`);
+		}
+		const tasks = await response.json();
+		window.CALENDAR_TASKS = tasks; // store tasks globally
+		renderTasks(); // render tasks after fetching
+	} catch (err) {
+		console.error(err);
+		window.CALENDAR_TASKS = []; // set to empty array on error to avoid undefined issues
+	}
 }
