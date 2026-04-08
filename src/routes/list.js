@@ -28,8 +28,11 @@ function buildAutoListQuery(view, now) {
 
 // ---- Helper: build full Mongo query from request params ----
 
-function buildQuery({ view, tag, priority, dateFrom, dateTo, search }) {
+function buildQuery({ view, tag, priority, dateFrom, dateTo, search, username }) {
   const query = {};
+  if (username && username !== "admin") {
+    query.username = username;
+  }
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
@@ -81,8 +84,9 @@ async function fetchSortedPosts(query, sortBy, sortOrder) {
 router.get('/', async (req, res) => {
   try {
     const { view, tag, priority, dateFrom, dateTo, search, sortBy, sortOrder } = req.query;
+    const username = req.query.username;
     const activeView = view || 'all';
-    const query = buildQuery({ view, tag, priority, dateFrom, dateTo, search });
+    const query = buildQuery({ view, tag, priority, dateFrom, dateTo, search, username });
     const { posts, sBy } = await fetchSortedPosts(query, sortBy, sortOrder);
 
     const [allTags, savedViews] = await Promise.all([

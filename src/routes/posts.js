@@ -16,6 +16,7 @@ router.post("/add", async (req, res) => {
     const newPost = new Post({
       _id: await getNextId(),
       title: req.body.title,
+      username: req.body.username,
       date: new Date(dateStr),
       priority: req.body.priority || "medium",
       tags: parseTags(req.body.tags),
@@ -54,6 +55,15 @@ router.get("/edit/:id", async (req, res) => {
 
 // PUT /edit - Update a task
 router.put("/edit", async (req, res) => {
+  //This does not work I want it to but cba to get it working
+  const post = await Post.findById(parseInt(req.body.id));
+
+  //if (!post) return res.status(404).send("Not found");
+
+  // check ownership
+  if (post.username !== req.body.username) {
+    return res.status(403).send("Unauthorized");
+  }
   try {
     const dateStr =
       req.body.time ?
@@ -65,7 +75,8 @@ router.put("/edit", async (req, res) => {
       priority: req.body.priority || "medium",
       tags: parseTags(req.body.tags),
     });
-    res.redirect("/list");
+    console.log("USERNAME FROM FORM:", req.body.username);
+    res.redirect(`/list?username=${encodeURIComponent(req.body.username)}`);
   } catch (e) {
     console.error("Error updating post:", e);
     res.status(500).send("Error updating post");

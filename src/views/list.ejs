@@ -53,7 +53,7 @@
 
 <body>
   <%- include('nav.ejs') %>
-
+  
   <div class="container mt-4">
     <h4><strong>Task List</strong></h4>
 
@@ -67,6 +67,7 @@
 
     <!-- Search Bar -->
     <form method="GET" action="/list" class="mb-3">
+      <input type="hidden" name="username" id="usernameInput">
       <div class="input-group">
         <input type="text" class="form-control" name="search" placeholder="Search tasks..." value="<%= filters.search || '' %>">
         <!-- Preserve other filters -->
@@ -259,6 +260,21 @@
       });
     });
   </script>
+  <script>
+    let username = localStorage.getItem("username");
+    document.querySelectorAll('#usernameInput').forEach(el => {
+      el.value = username;
+    });
+</script>
 
+<script>
+  if (username) {
+    document.querySelectorAll('.smart-nav a').forEach(link => {
+      const url = new URL(link.href, window.location.origin);
+      url.searchParams.set("username", username);
+      link.href = url.toString();
+    });
+  }
+</script>
 </body>
 </html>
