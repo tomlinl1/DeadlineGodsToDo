@@ -35,7 +35,7 @@
       </ul>
     </div>
   </div>
-  <button onclick="completeAchievement('ach_04')">
+  <button onclick="completeAchievement('ach_05')">
     Complete Ach 03
   </button>
 </nav>
@@ -107,6 +107,9 @@
       const achieveDiv = document.createElement('div');
       achieveDiv.setAttribute('data-bs-toggle', 'collapse');
       achieveDiv.setAttribute('data-bs-target', `#achievement${counter}`);
+      achieveDiv.setAttribute('aria-expanded', 'false');
+      achieveDiv.setAttribute('aria-controls', `achievement${counter}`);
+      achieveDiv.style.cursor = 'pointer';
       achieveDiv.innerText = a.name;
 
       const collapseDiv = document.createElement('div');

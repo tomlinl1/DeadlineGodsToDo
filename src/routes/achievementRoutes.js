@@ -83,7 +83,8 @@ router.post("/:userId/complete/:achievementId", async (req, res) => {
       ach_01: "default",
       ach_02: "dark",
       ach_03: "ocean",
-      ach_04: "sunset"
+      ach_04: "sunset",
+      ach_05: "discord"
     };
 
     const unlockedTheme = themeUnlocks[achievementId];

@@ -7,7 +7,7 @@
   --bg-color: #ffffff;
   --text-color: #000000;
   --accent-color: #007bff;
-  --site-font: Arial;
+  --site-font: "Arial";
 }
 
 /* THEMES */
@@ -26,7 +26,7 @@
   --bg-color: #121212;
   --text-color: #ffffff;
   --accent-color: #bb86fc;
-  --site-font: Verdana;
+  --site-font: "Arial";
 }
 
 /* Ocean Theme */
@@ -39,7 +39,7 @@
   --bg-color: #0f172a;
   --text-color: #e0f2fe;
   --accent-color: #38bdf8;
-  --site-font: "Trebuchet MS";
+  --site-font: "Arial";
 }
 
 /* Sunset Theme */
@@ -52,13 +52,24 @@
   --bg-color: #A32C00;
   --text-color: #ffe4e6;
   --accent-color: #fb7185;
-  --site-font: Georgia;
+  --site-font: "Arial";
+}
+
+/* Discord */
+[data-theme="discord"] {
+  --nav-bg: #2C2D32;
+  --nav-text: #fff;
+
+  --bg-color: #323339;
+  --modal-color: #3A3B41;
+  --text-color: #fff;
 }
 
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: var(--site-font);
+  font-family: Arial, sans-serif;
 }
 
 .navbar-theme {
@@ -68,4 +79,15 @@ body {
 .navbar-theme .nav-link,
 .navbar-theme .navbar-brand {
   color: var(--nav-text) !important;
+}
+
+[data-theme="discord"] .modal-content {
+  background-color: #3A3B41;
+  color: white;
+}
+
+[data-theme="discord"] .card {
+  background-color: white;
+  color: gray;
+  border: 1px solid #444;
 }
