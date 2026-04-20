@@ -9,6 +9,10 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  username: {
+    type: String,
+    required: true,
+  },
   date: {
     type: Date,
     required: true,
@@ -26,6 +30,10 @@ const postSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  
+},
+{
+  timestamps: true
 });
 
 const Post = mongoose.model('Post', postSchema, 'posts');

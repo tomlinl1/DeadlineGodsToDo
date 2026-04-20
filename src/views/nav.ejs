@@ -19,7 +19,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="/list">List</a></li>
+        <li class="nav-item"><a class="nav-link" href="/list" id="listLink">List</a></li>
         <li class="nav-item"><a class="nav-link" href="#" id="openAchievements">Achievements</a></li>
         <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
         <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
@@ -27,6 +27,9 @@
       </ul>
     </div>
   </div>
+  <button onclick="completeAchievement('ach_03')">
+    Complete Ach 03
+  </button>
 </nav>
 
 <!-- ✅ Bootstrap 5 Modal -->
@@ -116,7 +119,7 @@ function renderAchievements(type) {
 
 // Open achievements modal
 document.getElementById("openAchievements").addEventListener("click", () => {
-  const username = localStorage.getItem("username");
+  let username = localStorage.getItem("username");
   fetchAchievementsByUsername(username).then(() => {
     const modal = new bootstrap.Modal(document.getElementById('achievementsModal'));
     modal.show();
@@ -140,4 +143,56 @@ document.querySelectorAll(".filter").forEach(span => {
     }
 
   })();
+</script>
+
+<script>
+  async function completeAchievement(achievementId) {
+  const userId = localStorage.getItem("username");
+
+  const res = await fetch(
+    `/api/achievements/${userId}/complete/${achievementId}`,
+    {
+      method: "POST"
+    }
+  );
+
+  const data = await res.json();
+
+  console.log("Achievement updated:", data);
+  alert("Achievement completed!");
+}
+</script>
+
+<script>
+  (function () {
+
+    const username = localStorage.getItem("username");
+    if (username) {
+      const listLink = document.getElementById("listLink");
+      listLink.href = `/list?username=${encodeURIComponent(username)}`;
+    }
+
+    if (!username) return;
+
+    async function applySavedFont() {
+      try {
+        const res = await fetch(`/api/users?user_id=${username}`);
+        const user = await res.json();
+
+        const font = user.customization?.font || "Arial";
+
+        document.documentElement.style.setProperty("--site-font", font);
+
+      } catch (err) {
+        console.error("Failed to apply global font:", err);
+      }
+    }
+
+    applySavedFont();
+
+  })();  
+</script>
+
+<script>
+  const username = localStorage.getItem("username");
 </script>
