@@ -5,9 +5,9 @@ import mongoose from 'mongoose';
 // - user_id (Number, required)
 // - start_date (Date, required)
 // - end_date (Date, optional, null means single-day event)
-// - name (String, task/title shown on calendar)
+// - title (String, task/title shown on calendar)
 // - priority (Number, 1-3, higher = more important)
-// - link (String, null for now, could be used in future)
+// - completed (Boolean, default false)
 
 const calendarTaskSchema = new mongoose.Schema({
   task_id: {
@@ -39,9 +39,8 @@ const calendarTaskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-});
+}, { collection: 'tasks' }); // specify collection name explicitly
 
-// Use the `tasks` collection explicitly
-const CalendarTask = mongoose.model('CalendarTask', calendarTaskSchema, 'tasks');
+const CalendarTask = mongoose.model('CalendarTask', calendarTaskSchema);
 
 export default CalendarTask;

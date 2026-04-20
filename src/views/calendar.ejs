@@ -37,6 +37,15 @@
             </thead>
             <tbody id="calendar-body"></tbody>
         </table>
+
+        <!-- Upcoming & Overdue Tasks Sidebar-->
+         <div class="mt-4">
+            <h3>Upcoming Tasks</h3>
+         </div>
+
+         <div class="mt-2">
+            <h3>Overdue Tasks</h3>
+         </div>
     </div>
 
     <script src="/public/js/calendar.js"></script>
@@ -74,18 +83,27 @@
 -->
 
 <!-- Features that still need implimented
- - DB integration
- - button to add task
- - modals for days
- - task links 
- - alerting users (number by icon for number of alerts)
- - look better
+ - Now
+        -Posts to tasks
+        -Get user 
+        -get tasks from user
+        -add post
 -->
 
 <!-- Feature Ideas
- - reocurring tasks (weekly, monthly, yearly)
+ - reocurring tasks (weekly, monthly, yearly) (use tags so when a task reaches its due date it automatically creates the same task at a different time)
  - color customization
  - style customization
  - drag and drop to change dates and length
  - canvas api/key or whatever it is to connect canvas
+ - Week to week view
+ - upcoming & overdue tasks (right side of calendar)
+ - notifactions (icon in top)
+ - topic of task (use tags)
+ - milestones (tasks that are auto created when making a task and selecting add milestones)
+    - add task model has an option to add milestones 
+    - set the reoccuring times (weekly, biweekly, monthly)
+    - ideas for milestones
+        - a glorified checkbox 
+        - type into the milestone what you did
 -->

@@ -96,6 +96,7 @@ function renderTasks() {
         const actualEndIdx = (endIndex === -1) ? startIndex : endIndex;
 
         let canRender = true;
+		const taskPriority = task.priority || 0; // default to 0 if priority is missing
         //
         // Todo: Check if any cell in the task's date range has reached the task limit
         //
@@ -105,7 +106,7 @@ function renderTasks() {
         //
         // Todo: Create a better html structure for the task (e.g., include priority color, link if available, etc.)
         //
-        taskDiv.className = 'task';
+        taskDiv.className = `task priority-${taskPriority}`; // add priority class for styling
         taskDiv.title = task.title;
         taskDiv.style.cursor = 'pointer';
         taskDiv.dataset.taskId = task.task_id; // store task ID for potential future use (e.g., click handler)

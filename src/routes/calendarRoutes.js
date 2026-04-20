@@ -15,8 +15,6 @@ router.get("/:user_id", async (req, res) => {
         // Get tasks for user, sorted by priority (highest first)
         const tasks = await CalendarTask.find({ user_id: userId }).sort({ priority: -1 }); // sort by priority descending
         res.json(tasks);
-        console.log("All tasks", await CalendarTask.countDocuments());
-        console.log("Fetched tasks:", tasks);
 
     } catch (err) {
         console.error(err);
