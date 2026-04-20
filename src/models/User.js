@@ -7,10 +7,15 @@ const userAchievementSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email: { type: String },
-  totalPoints: { type: Number, default: 0 },
-  achievements: [userAchievementSchema]
+  user_id: { type: String, required: true },
+  
+  total_points: { type: Number, default: 0 },
+  total_tasks: { type: Number, default: 0 },
+  achievements: [userAchievementSchema],
+  customization: {
+    font: { type: String, default: "Arial" },
+    unlockedFonts: { type: [String], default: ["Arial"] }
+  }
 }, { collection: "users" });
 
 export default mongoose.model("User", userSchema);

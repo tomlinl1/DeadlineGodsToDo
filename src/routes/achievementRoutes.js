@@ -4,6 +4,8 @@ import Achievement from "../models/Achievement.js";
 
 const router = express.Router();
 
+
+
 // -----------------------------
 // Get all achievements for a user
 // -----------------------------
@@ -48,7 +50,7 @@ router.post("/:userId/complete/:achievementId", async (req, res) => {
   try {
     const { userId, achievementId } = req.params;
 
-    const user = await User.findById(userId);
+    const user = await User.findOne({ user_id: userId });
     if (!user) return res.status(404).json({ message: "User not found" });
 
     // Find user's achievement by achievement_ID
@@ -76,6 +78,20 @@ router.post("/:userId/complete/:achievementId", async (req, res) => {
     const achievement = await Achievement.findOne({ id: achievementId });
     if (achievement) user.totalPoints += Number(achievement.points);
 
+    //Mapping achevements to a font
+    const fontUnlocks = {
+      ach_01: "Verdana",
+      ach_02: "Arial",
+      ach_03: "Georgia",
+      ach_04: "Courier New",
+      ach_05: "Times New Roman"
+    };
+
+    const unlockedFont = fontUnlocks[achievementId];
+
+    if (unlockedFont && !user.customization.unlockedFonts.includes(unlockedFont)) {
+      user.customization.unlockedFonts.push(unlockedFont);
+    }
     await user.save();
 
     res.json({ message: "Achievement completed", totalPoints: user.totalPoints });

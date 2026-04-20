@@ -4,133 +4,153 @@
 <head>
   <!-- Required meta tags -->
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="/public/css/styles.css">
+  
 
   <title>Task List - The Deadline Crusher</title>
   <style>
-    .smart-nav .btn { margin-right: 5px; margin-bottom: 5px; }
-    .filter-panel { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-    .pinned-badge { font-size: 0.75rem; }
-    .overdue { border-left: 4px solid #dc3545; }
-    .due-today { border-left: 4px solid #ffc107; }
-    .upcoming { border-left: 4px solid #28a745; }
-    .saved-views-list .list-group-item { display: flex; justify-content: space-between; align-items: center; }
+    .smart-nav .btn {
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .filter-panel {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+
+    .pinned-badge {
+      font-size: 0.75rem;
+    }
+
+    .overdue {
+      border-left: 4px solid #dc3545;
+    }
+
+    .due-today {
+      border-left: 4px solid #ffc107;
+    }
+
+    .upcoming {
+      border-left: 4px solid #28a745;
+    }
+
+    .saved-views-list .list-group-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
   </style>
 </head>
 
 <body>
   <%- include('nav.ejs') %>
-
+  
   <div class="container mt-4">
     <h4><strong>Task List</strong></h4>
 
     <!-- Auto List Buttons -->
     <div class="smart-nav mb-3">
-      <a href="/list?view=today" class="btn btn-outline-warning btn-sm <%= activeView === 'today' ? 'active' : '' %>">
-        Today
-      </a>
-      <a href="/list?view=upcoming" class="btn btn-outline-success btn-sm <%= activeView === 'upcoming' ? 'active' : '' %>">
-        Upcoming
-      </a>
-      <a href="/list?view=overdue" class="btn btn-outline-danger btn-sm <%= activeView === 'overdue' ? 'active' : '' %>">
-        Overdue
-      </a>
-      <a href="/list" class="btn btn-outline-secondary btn-sm <%= activeView === 'all' ? 'active' : '' %>">
-        All Tasks
-      </a>
+      <a href="/list?view=today" class="btn btn-outline-warning btn-sm <%= activeView === 'today' ? 'active' : '' %>">Today</a>
+      <a href="/list?view=upcoming" class="btn btn-outline-success btn-sm <%= activeView === 'upcoming' ? 'active' : '' %>">Upcoming</a>
+      <a href="/list?view=overdue" class="btn btn-outline-danger btn-sm <%= activeView === 'overdue' ? 'active' : '' %>">Overdue</a>
+      <a href="/list" class="btn btn-outline-secondary btn-sm <%= activeView === 'all' ? 'active' : '' %>">All Tasks</a>
     </div>
 
     <!-- Search Bar -->
     <form method="GET" action="/list" class="mb-3">
+      <input type="hidden" name="username" id="usernameInput">
       <div class="input-group">
-        <input type="text" class="form-control" name="search" placeholder="Search tasks..."
-               value="<%= filters.search || '' %>" />
+        <input type="text" class="form-control" name="search" placeholder="Search tasks..." value="<%= filters.search || '' %>">
         <!-- Preserve other filters -->
-        <input type="hidden" name="tag" value="<%= filters.tag || '' %>" />
-        <input type="hidden" name="priority" value="<%= filters.priority || '' %>" />
-        <input type="hidden" name="dateFrom" value="<%= filters.dateFrom || '' %>" />
-        <input type="hidden" name="dateTo" value="<%= filters.dateTo || '' %>" />
-        <input type="hidden" name="sortBy" value="<%= sortBy || 'date' %>" />
-        <input type="hidden" name="sortOrder" value="<%= sortOrder || 'asc' %>" />
-        <div class="input-group-append">
-          <button class="btn btn-outline-primary" type="submit">Search</button>
-        </div>
+        <input type="hidden" name="tag" value="<%= filters.tag || '' %>">
+        <input type="hidden" name="priority" value="<%= filters.priority || '' %>">
+        <input type="hidden" name="dateFrom" value="<%= filters.dateFrom || '' %>">
+        <input type="hidden" name="dateTo" value="<%= filters.dateTo || '' %>">
+        <input type="hidden" name="sortBy" value="<%= sortBy || 'date' %>">
+        <input type="hidden" name="sortOrder" value="<%= sortOrder || 'asc' %>">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
       </div>
     </form>
 
     <!-- Filter Panel -->
     <div class="filter-panel">
       <form method="GET" action="/list" id="filterForm">
-        <div class="form-row align-items-end">
-          <div class="form-group col-md-2">
-            <label><small>Tag</small></label>
-            <select class="form-control form-control-sm" name="tag">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-2">
+            <label class="form-label"><small>Tag</small></label>
+            <select class="form-select form-select-sm" name="tag">
               <option value="">All Tags</option>
               <% allTags.forEach(function(tag) { %>
                 <option value="<%= tag %>" <%= filters.tag === tag ? 'selected' : '' %>><%= tag %></option>
               <% }); %>
             </select>
           </div>
-          <div class="form-group col-md-2">
-            <label><small>Priority</small></label>
-            <select class="form-control form-control-sm" name="priority">
+          <div class="col-md-2">
+            <label class="form-label"><small>Priority</small></label>
+            <select class="form-select form-select-sm" name="priority">
               <option value="">All</option>
               <option value="high" <%= filters.priority === 'high' ? 'selected' : '' %>>High</option>
               <option value="medium" <%= filters.priority === 'medium' ? 'selected' : '' %>>Medium</option>
               <option value="low" <%= filters.priority === 'low' ? 'selected' : '' %>>Low</option>
             </select>
           </div>
-          <div class="form-group col-md-2">
-            <label><small>From Date</small></label>
-            <input type="date" class="form-control form-control-sm" name="dateFrom"
-                   value="<%= filters.dateFrom || '' %>" />
+          <div class="col-md-2">
+            <label class="form-label"><small>From Date</small></label>
+            <input type="date" class="form-control form-control-sm" name="dateFrom" value="<%= filters.dateFrom || '' %>">
           </div>
-          <div class="form-group col-md-2">
-            <label><small>To Date</small></label>
-            <input type="date" class="form-control form-control-sm" name="dateTo"
-                   value="<%= filters.dateTo || '' %>" />
+          <div class="col-md-2">
+            <label class="form-label"><small>To Date</small></label>
+            <input type="date" class="form-control form-control-sm" name="dateTo" value="<%= filters.dateTo || '' %>">
           </div>
-          <div class="form-group col-md-2">
-            <label><small>Sort By</small></label>
-            <select class="form-control form-control-sm" name="sortBy">
+          <div class="col-md-2">
+            <label class="form-label"><small>Sort By</small></label>
+            <select class="form-select form-select-sm" name="sortBy">
               <option value="date" <%= sortBy === 'date' ? 'selected' : '' %>>Due Date</option>
               <option value="title" <%= sortBy === 'title' ? 'selected' : '' %>>Title</option>
               <option value="priority" <%= sortBy === 'priority' ? 'selected' : '' %>>Priority</option>
             </select>
           </div>
-          <div class="form-group col-md-1">
-            <label><small>Order</small></label>
-            <select class="form-control form-control-sm" name="sortOrder">
+          <div class="col-md-1">
+            <label class="form-label"><small>Order</small></label>
+            <select class="form-select form-select-sm" name="sortOrder">
               <option value="asc" <%= sortOrder === 'asc' ? 'selected' : '' %>>Asc</option>
               <option value="desc" <%= sortOrder === 'desc' ? 'selected' : '' %>>Desc</option>
             </select>
           </div>
-          <div class="form-group col-md-1">
-            <input type="hidden" name="search" value="<%= filters.search || '' %>" />
-            <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+          <div class="col-md-1">
+            <input type="hidden" name="search" value="<%= filters.search || '' %>">
+            <button type="submit" class="btn btn-primary btn-sm w-100">Filter</button>
           </div>
         </div>
-        <a href="/list" class="btn btn-link btn-sm p-0">Clear Filters</a>
+        <a href="/list" class="btn btn-link btn-sm mt-2 p-0">Clear Filters</a>
       </form>
     </div>
 
     <!-- Save Current View -->
     <div class="mb-3">
-      <form method="POST" action="/list/views/save" class="form-inline">
-        <input type="hidden" name="tag" value="<%= filters.tag || '' %>" />
-        <input type="hidden" name="priority" value="<%= filters.priority || '' %>" />
-        <input type="hidden" name="dateFrom" value="<%= filters.dateFrom || '' %>" />
-        <input type="hidden" name="dateTo" value="<%= filters.dateTo || '' %>" />
-        <input type="hidden" name="search" value="<%= filters.search || '' %>" />
-        <input type="hidden" name="sortBy" value="<%= sortBy || 'date' %>" />
-        <input type="hidden" name="sortOrder" value="<%= sortOrder || 'asc' %>" />
-        <input type="text" class="form-control form-control-sm mr-2" name="viewName"
-               placeholder="View name..." required />
-        <button type="submit" class="btn btn-outline-success btn-sm">Save View</button>
+      <form method="POST" action="/list/views/save" class="row g-2 align-items-center">
+        <input type="hidden" name="tag" value="<%= filters.tag || '' %>">
+        <input type="hidden" name="priority" value="<%= filters.priority || '' %>">
+        <input type="hidden" name="dateFrom" value="<%= filters.dateFrom || '' %>">
+        <input type="hidden" name="dateTo" value="<%= filters.dateTo || '' %>">
+        <input type="hidden" name="search" value="<%= filters.search || '' %>">
+        <input type="hidden" name="sortBy" value="<%= sortBy || 'date' %>">
+        <input type="hidden" name="sortOrder" value="<%= sortOrder || 'asc' %>">
+        <div class="col-auto">
+          <input type="text" class="form-control form-control-sm" name="viewName" placeholder="View name..." required>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-outline-success btn-sm">Save View</button>
+        </div>
       </form>
     </div>
 
@@ -140,27 +160,27 @@
         <h6>Saved Views</h6>
         <div class="saved-views-list list-group list-group-flush">
           <% savedViews.forEach(function(view) { %>
-            <div class="list-group-item list-group-item-action py-1">
+            <div class="list-group-item d-flex justify-content-between align-items-center py-1">
               <a href="/list/views/<%= view._id %>/load">
                 <%= view.name %>
                 <% if (view.pinned) { %>
-                  <span class="badge badge-primary pinned-badge">Pinned</span>
+                  <span class="badge bg-primary pinned-badge">Pinned</span>
                 <% } %>
               </a>
-              <span>
+              <div class="btn-group btn-group-sm" role="group">
                 <% if (!view.pinned) { %>
-                  <form method="POST" action="/list/views/<%= view._id %>/pin" style="display:inline;">
-                    <button type="submit" class="btn btn-outline-primary btn-sm py-0">Pin</button>
+                  <form method="POST" action="/list/views/<%= view._id %>/pin" class="m-0">
+                    <button type="submit" class="btn btn-outline-primary py-0">Pin</button>
                   </form>
                 <% } else { %>
-                  <form method="POST" action="/list/views/<%= view._id %>/unpin" style="display:inline;">
-                    <button type="submit" class="btn btn-outline-secondary btn-sm py-0">Unpin</button>
+                  <form method="POST" action="/list/views/<%= view._id %>/unpin" class="m-0">
+                    <button type="submit" class="btn btn-outline-secondary py-0">Unpin</button>
                   </form>
                 <% } %>
-                <form method="POST" action="/list/views/<%= view._id %>/delete?_method=DELETE" style="display:inline;">
-                  <button type="submit" class="btn btn-outline-danger btn-sm py-0">X</button>
+                <form method="POST" action="/list/views/<%= view._id %>/delete?_method=DELETE" class="m-0">
+                  <button type="submit" class="btn btn-outline-danger py-0">X</button>
                 </form>
-              </span>
+              </div>
             </div>
           <% }); %>
         </div>
@@ -175,13 +195,17 @@
       <% if (posts.length === 0) { %>
         <li class="list-group-item text-center text-muted">No tasks found.</li>
       <% } %>
-      <% var now = new Date(); now.setHours(0,0,0,0); %>
+      <% var now = new Date(); %>
       <% posts.forEach(function(post) { %>
         <%
-          var dueDate = new Date(post.date);
-          dueDate.setHours(0,0,0,0);
-          var isOverdue = dueDate < now && !post.completed;
-          var isToday = dueDate.getTime() === now.getTime();
+          var _due = new Date(post.date);
+          var dueIso = _due.getFullYear() + '-' + String(_due.getMonth()+1).padStart(2,'0') + '-' + String(_due.getDate()).padStart(2,'0');
+          var dueParts = dueIso.split('-');
+          var dueDisplay = dueParts[1] + '/' + dueParts[2] + '/' + dueParts[0].slice(2);
+          var dueTime = _due.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+          var todayStr = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+          var isOverdue = dueIso < todayStr && !post.completed;
+          var isToday = dueIso === todayStr;
           var rowClass = isOverdue ? 'overdue' : isToday ? 'due-today' : 'upcoming';
         %>
         <li class="list-group-item <%= rowClass %>">
@@ -196,18 +220,18 @@
               </h5>
               <p class="mb-1">
                 <small class="text-muted">
-                  Due: <%= dueDate.toLocaleDateString() %>
-                  <% if (isOverdue) { %> <span class="text-danger font-weight-bold">OVERDUE</span><% } %>
-                  <% if (isToday) { %> <span class="text-warning font-weight-bold">TODAY</span><% } %>
+                  Due: <%= dueDisplay %> at <%= dueTime %>
+                  <% if (isOverdue) { %> <span class="text-danger fw-bold">OVERDUE</span><% } %>
+                  <% if (isToday) { %> <span class="text-warning fw-bold">TODAY</span><% } %>
                 </small>
               </p>
               <p class="mb-0">
-                <span class="badge badge-<%= post.priority === 'high' ? 'danger' : post.priority === 'medium' ? 'warning' : 'info' %>">
+                <span class="badge bg-<%= post.priority === 'high' ? 'danger' : post.priority === 'medium' ? 'warning' : 'info' %>">
                   <%= post.priority || 'medium' %>
                 </span>
                 <% if (post.tags && post.tags.length > 0) { %>
                   <% post.tags.forEach(function(tag) { %>
-                    <a href="/list?tag=<%= encodeURIComponent(tag) %>" class="badge badge-secondary"><%= tag %></a>
+                    <a href="/list?tag=<%= encodeURIComponent(tag) %>" class="badge bg-secondary"><%= tag %></a>
                   <% }); %>
                 <% } %>
               </p>
@@ -222,7 +246,8 @@
     </ul>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $('.delete').click(function (e) {
       var btn = $(this);
@@ -235,7 +260,21 @@
       });
     });
   </script>
+  <script>
+    let username = localStorage.getItem("username");
+    document.querySelectorAll('#usernameInput').forEach(el => {
+      el.value = username;
+    });
+</script>
 
+<script>
+  if (username) {
+    document.querySelectorAll('.smart-nav a').forEach(link => {
+      const url = new URL(link.href, window.location.origin);
+      url.searchParams.set("username", username);
+      link.href = url.toString();
+    });
+  }
+</script>
 </body>
-
 </html>

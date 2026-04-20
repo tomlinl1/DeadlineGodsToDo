@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Customize</title>
+  </head>
+
+  <body>
+    <%- include('nav.ejs') %>
+
+    <div class="container mt-4">
+      <h3>Customize Appearance</h3>
+
+      <div class="mt-3">
+        <label class="form-label">Font</label>
+
+        <select id="fontSelect" class="form-select" style="max-width:300px">
+          <option value="Arial">Arial</option>
+          <option value="Georgia">Georgia</option>
+          <option value="Courier New">Courier New</option>
+          <option value="Verdana">Verdana</option>
+          <option value="Times New Roman">Times New Roman</option>
+        </select>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+
+        const select = document.getElementById("fontSelect");
+        const username = localStorage.getItem("username");
+
+        // -----------------------------
+        // Apply font instantly to page
+        // -----------------------------
+        function applyFont(font) {
+          document.documentElement.style.setProperty("--site-font", font);
+        }
+
+        // ⭐ NEW: LOCK / UNLOCK DROPDOWN BASED ON ACHIEVEMENTS
+        function updateDropdown(user) {
+          const unlocked = user.customization?.unlockedFonts || [];
+
+          Array.from(select.options).forEach(option => {
+            const font = option.value;
+
+            const isUnlocked = unlocked.includes(font);
+
+            option.disabled = !isUnlocked;
+
+            // reset text every time (VERY IMPORTANT)
+            option.textContent = isUnlocked ? font : `${font} 🔒`;
+          });
+        }
+
+        // -----------------------------
+        // LOAD USER DATA FROM MONGODB
+        // -----------------------------
+        async function loadUserFont() {
+          try {
+            const res = await fetch(`/api/users?user_id=${username}`);
+            const user = await res.json();
+
+            const font = user.customization?.font || "Arial";
+
+            select.value = font;
+            applyFont(font);
+
+            // ⭐ THIS CONNECTS ACHIEVEMENTS → UI
+            updateDropdown(user);
+
+          } catch (err) {
+            console.error("Failed to load font:", err);
+
+            select.value = "Arial";
+            applyFont("Arial");
+          }
+        }
+
+        // -----------------------------
+        // SAVE FONT TO MONGODB
+        // -----------------------------
+        async function saveFont(font) {
+          try {
+            await fetch(`/api/users/${username}/customization/font`, {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({ font })
+            });
+
+          } catch (err) {
+            console.error("Failed to save font:", err);
+          }
+        }
+
+        // -----------------------------
+        // HANDLE USER CHANGES FONT
+        // -----------------------------
+        select.addEventListener("change", async () => {
+          const font = select.value;
+
+          applyFont(font);       // instant UI update
+          await saveFont(font);  // persist to MongoDB
+        });
+
+        // -----------------------------
+        // INIT PAGE
+        // -----------------------------
+        loadUserFont();
+
+      })();
+    </script>
+
+  </body>
+</html>
