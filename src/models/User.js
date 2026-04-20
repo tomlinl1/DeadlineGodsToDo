@@ -13,8 +13,8 @@ const userSchema = new mongoose.Schema({
   total_tasks: { type: Number, default: 0 },
   achievements: [userAchievementSchema],
   customization: {
-    font: { type: String, default: "Arial" },
-    unlockedFonts: { type: [String], default: ["Arial"] }
+    activeTheme: { type: String, default: "default" },
+    unlockedThemes: { type: [String], default: ["default"] }
   }
 }, { collection: "users" });
 

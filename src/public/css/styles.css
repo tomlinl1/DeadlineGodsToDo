@@ -1,7 +1,71 @@
-:root{
+:root {
+  /* nav */
+  --nav-bg: #f8f9fa;
+  --nav-text: #000;
+
+  /* body */
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --accent-color: #007bff;
   --site-font: Arial;
 }
 
-*{
+/* THEMES */
+[data-theme="sunset"] {
+  --nav-bg: #D13800;
+  --nav-text: #1a1a1a;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  /* nav */
+  --nav-bg: #1e1e1e;
+  --nav-text: #fff;
+
+  /* body */
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --accent-color: #bb86fc;
+  --site-font: Verdana;
+}
+
+/* Ocean Theme */
+[data-theme="ocean"] {
+  /* nav */
+  --nav-bg: #0b3d91;
+  --nav-text: #ffffff;
+
+  /* body */
+  --bg-color: #0f172a;
+  --text-color: #e0f2fe;
+  --accent-color: #38bdf8;
+  --site-font: "Trebuchet MS";
+}
+
+/* Sunset Theme */
+[data-theme="sunset"] {
+  /* nav */
+  --nav-bg: #D13800;
+  --nav-text: #1a1a1a;
+
+  /* body */
+  --bg-color: #A32C00;
+  --text-color: #ffe4e6;
+  --accent-color: #fb7185;
+  --site-font: Georgia;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
   font-family: var(--site-font);
+}
+
+.navbar-theme {
+  background-color: var(--nav-bg) !important;
+}
+
+.navbar-theme .nav-link,
+.navbar-theme .navbar-brand {
+  color: var(--nav-text) !important;
 }
