@@ -4,17 +4,14 @@
   --nav-text: #000;
 
   /* body */
+  --modal-color: #f8f9fa;
+  --border-color: black;
   --bg-color: #ffffff;
   --text-color: #000000;
   --accent-color: #007bff;
-  --site-font: "Arial";
 }
 
 /* THEMES */
-[data-theme="sunset"] {
-  --nav-bg: #D13800;
-  --nav-text: #1a1a1a;
-}
 
 /* Dark Theme */
 [data-theme="dark"] {
@@ -43,16 +40,14 @@
 }
 
 /* Sunset Theme */
-[data-theme="sunset"] {
-  /* nav */
-  --nav-bg: #D13800;
-  --nav-text: #1a1a1a;
+[data-theme="porple"] {
+  --nav-bg: #4B2C5E;
+  --nav-text: #fff;
 
-  /* body */
-  --bg-color: #A32C00;
-  --text-color: #ffe4e6;
-  --accent-color: #fb7185;
-  --site-font: "Arial";
+  --border-color: #2D3047;
+  --bg-color: #6f567e;
+  --modal-color: #5d416e;
+  --text-color: #fff;
 }
 
 /* Discord */
@@ -60,9 +55,22 @@
   --nav-bg: #2C2D32;
   --nav-text: #fff;
 
+  --border-color: #2C2D32;
   --bg-color: #323339;
   --modal-color: #3A3B41;
   --text-color: #fff;
+}
+
+/* Mint */
+[data-theme="mint"] {
+  --nav-bg: #1c515d;
+  --nav-text: #fff;
+
+  --border-color: #e5fdf6;
+  --bg-color: #aae5a4;
+  --modal-color: #2b8e79;
+  --text-color: #fff;
+  
 }
 
 body {
@@ -81,13 +89,25 @@ body {
   color: var(--nav-text) !important;
 }
 
-[data-theme="discord"] .modal-content {
-  background-color: #3A3B41;
-  color: white;
+.modal-content {
+  background-color: var(--modal-color);
+  color: var(--text-color)
 }
 
-[data-theme="discord"] .card {
-  background-color: white;
-  color: gray;
-  border: 1px solid #444;
+.card {
+  background-color: var(--bg-color);
+  color: var(--site-font);
+  border: 1px solid var(--border-color);
 }
+
+.filter-panel {
+  background-color: var(--modal-color);
+}
+
+.list-group-item {
+  background-color: var(--modal-color);
+  color: var(--site-font);
+  border-color: var(--border-color);
+  
+}
+

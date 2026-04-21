@@ -59,10 +59,10 @@
 
     <!-- Auto List Buttons -->
     <div class="smart-nav mb-3">
-      <a href="/list?view=today" class="btn btn-outline-warning btn-sm <%= activeView === 'today' ? 'active' : '' %>">Today</a>
-      <a href="/list?view=upcoming" class="btn btn-outline-success btn-sm <%= activeView === 'upcoming' ? 'active' : '' %>">Upcoming</a>
-      <a href="/list?view=overdue" class="btn btn-outline-danger btn-sm <%= activeView === 'overdue' ? 'active' : '' %>">Overdue</a>
-      <a href="/list" class="btn btn-outline-secondary btn-sm <%= activeView === 'all' ? 'active' : '' %>">All Tasks</a>
+      <a href="/list?view=today" class="btn btn-warning btn-sm <%= activeView === 'today' ? 'active' : '' %>">Today</a>
+      <a href="/list?view=upcoming" class="btn btn-success btn-sm <%= activeView === 'upcoming' ? 'active' : '' %>">Upcoming</a>
+      <a href="/list?view=overdue" class="btn btn-danger btn-sm <%= activeView === 'overdue' ? 'active' : '' %>">Overdue</a>
+      <a href="/list" class="btn btn-secondary btn-sm <%= activeView === 'all' ? 'active' : '' %>">All Tasks</a>
     </div>
 
     <!-- Search Bar -->
@@ -77,7 +77,7 @@
         <input type="hidden" name="dateTo" value="<%= filters.dateTo || '' %>">
         <input type="hidden" name="sortBy" value="<%= sortBy || 'date' %>">
         <input type="hidden" name="sortOrder" value="<%= sortOrder || 'asc' %>">
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
       </div>
     </form>
 
@@ -149,7 +149,7 @@
           <input type="text" class="form-control form-control-sm" name="viewName" placeholder="View name..." required>
         </div>
         <div class="col-auto">
-          <button type="submit" class="btn btn-outline-success btn-sm">Save View</button>
+          <button type="submit" class="btn btn-success btn-sm">Save View</button>
         </div>
       </form>
     </div>
@@ -170,15 +170,15 @@
               <div class="btn-group btn-group-sm" role="group">
                 <% if (!view.pinned) { %>
                   <form method="POST" action="/list/views/<%= view._id %>/pin" class="m-0">
-                    <button type="submit" class="btn btn-outline-primary py-0">Pin</button>
+                    <button type="submit" class="btn btn-primary py-0">Pin</button>
                   </form>
                 <% } else { %>
                   <form method="POST" action="/list/views/<%= view._id %>/unpin" class="m-0">
-                    <button type="submit" class="btn btn-outline-secondary py-0">Unpin</button>
+                    <button type="submit" class="btn btn-secondary py-0">Unpin</button>
                   </form>
                 <% } %>
                 <form method="POST" action="/list/views/<%= view._id %>/delete?_method=DELETE" class="m-0">
-                  <button type="submit" class="btn btn-outline-danger py-0">X</button>
+                  <button type="submit" class="btn btn-danger py-0">X</button>
                 </form>
               </div>
             </div>
@@ -193,7 +193,7 @@
     <!-- Task List -->
     <ul class="list-group">
       <% if (posts.length === 0) { %>
-        <li class="list-group-item text-center text-muted">No tasks found.</li>
+        <li class="list-group-item text-center">No tasks found.</li>
       <% } %>
       <% var now = new Date(); %>
       <% posts.forEach(function(post) { %>
@@ -219,7 +219,7 @@
                 </a>
               </h5>
               <p class="mb-1">
-                <small class="text-muted">
+                <small>
                   Due: <%= dueDisplay %> at <%= dueTime %>
                   <% if (isOverdue) { %> <span class="text-danger fw-bold">OVERDUE</span><% } %>
                   <% if (isToday) { %> <span class="text-warning fw-bold">TODAY</span><% } %>
@@ -237,8 +237,8 @@
               </p>
             </div>
             <div>
-              <a href="/edit/<%= post._id %>" class="btn btn-sm btn-outline-secondary">Edit</a>
-              <button class="delete btn btn-sm btn-outline-danger" data-id="<%= post._id %>">Delete</button>
+              <a href="/edit/<%= post._id %>" class="btn btn-sm btn-secondary">Edit</a>
+              <button class="delete btn btn-sm btn-danger" data-id="<%= post._id %>">Delete</button>
             </div>
           </div>
         </li>
