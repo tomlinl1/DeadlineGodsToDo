@@ -237,6 +237,9 @@
               </p>
             </div>
             <div>
+              <% if (!post.completed) { %>
+                <button class="complete btn btn-sm btn-success" data-id="<%= post._id %>">Complete</button>
+              <% } %>
               <a href="/edit/<%= post._id %>" class="btn btn-sm btn-secondary">Edit</a>
               <button class="delete btn btn-sm btn-danger" data-id="<%= post._id %>">Delete</button>
             </div>
@@ -260,21 +263,41 @@
       });
     });
   </script>
+
+  <script>
+    $('.complete').click(function () {
+      const btn = $(this);
+      const username = localStorage.getItem("username");
+      $.ajax({
+        method: 'POST',
+        url: '/complete/' + btn.data('id'),
+        contentType: 'application/json',
+        data: JSON.stringify({ username: username })
+      }).done(function () {
+        // Disable button and strike through the title visually
+        btn.prop('disabled', true).text('Done');
+        btn.closest('li').find('h5 a').wrapInner('<s></s>');
+      }).fail(function () {
+        alert('Could not complete task.');
+      });
+    });
+  </script>
+
   <script>
     let username = localStorage.getItem("username");
     document.querySelectorAll('#usernameInput').forEach(el => {
       el.value = username;
     });
-</script>
+  </script>
 
-<script>
-  if (username) {
-    document.querySelectorAll('.smart-nav a').forEach(link => {
-      const url = new URL(link.href, window.location.origin);
-      url.searchParams.set("username", username);
-      link.href = url.toString();
-    });
-  }
-</script>
+  <script>
+    if (username) {
+      document.querySelectorAll('.smart-nav a').forEach(link => {
+        const url = new URL(link.href, window.location.origin);
+        url.searchParams.set("username", username);
+        link.href = url.toString();
+      });
+    }
+  </script>
 </body>
 </html>

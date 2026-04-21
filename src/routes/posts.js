@@ -1,6 +1,7 @@
 import { Router } from "express";
 import Post from "../models/Post.js";
 import { getNextId, parseTags } from "../util/util.js";
+import User from "../models/User.js";
 
 const router = Router();
 
@@ -118,6 +119,30 @@ router.get("/listjson", async (req, res) => {
   } catch (e) {
     console.error("Error fetching posts JSON:", e);
     res.status(500).json({ error: "Error fetching posts" });
+  }
+});
+
+// POST /complete/:id - Mark task complete and update user counters
+router.post("/complete/:id", async (req, res) => {
+  try {
+    const post = await Post.findById(parseInt(req.params.id));
+    if (!post) return res.status(404).json({ error: "Task not found" });
+    if (post.completed) return res.status(400).json({ error: "Task already completed" });
+
+    post.completed = true;
+    await post.save();
+
+    const priorityField = `total_tasks_${post.priority}`; // e.g. total_tasks_low
+
+    await User.findOneAndUpdate(
+      { user_id: req.body.username },
+      { $inc: { total_tasks: 1, [priorityField]: 1 } }
+    );
+
+    res.json({ success: true });
+  } catch (e) {
+    console.error("Error completing task:", e);
+    res.status(500).json({ error: "Error completing task" });
   }
 });
 

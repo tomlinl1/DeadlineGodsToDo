@@ -11,6 +11,9 @@ const userSchema = new mongoose.Schema({
   
   total_points: { type: Number, default: 0 },
   total_tasks: { type: Number, default: 0 },
+  total_tasks_low: { type: Number, default: 0 },
+  total_tasks_medium: { type: Number, default: 0 },
+  total_tasks_high: { type: Number, default: 0 },
   achievements: [userAchievementSchema],
   customization: {
     activeTheme: { type: String, default: "default" },
