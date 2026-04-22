@@ -35,7 +35,7 @@
             const datePart = d.toLocaleDateString('en-US');
             const timePart = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
           %>
-          <p class="text-muted mb-3">
+          <p class="mb-3">
             Due: <%= datePart %> at <%= timePart %>
           </p>
         <% } else { %>
@@ -63,7 +63,7 @@
         <!-- Actions -->
         <div class="d-flex gap-2">
           <a href="/edit/<%= data._id %>" class="btn btn-primary">Edit Task</a>
-          <a href="/list" class="btn btn-outline-secondary">Back to List</a>
+          <a href="/list" id="listLink2" class="btn btn-secondary">Back to List</a>
         </div>
 
       </div>
@@ -73,6 +73,15 @@
 
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const username = localStorage.getItem("username")
+    if (username) {
+      const listLink2 = document.getElementById("listLink2");
+      if (listLink2) {
+        listLink2.href = `/list?username=${encodeURIComponent(username)}`;
+      }
+    }
+  </script>
 
 </body>
 

@@ -22,7 +22,7 @@
   /* body */
   --bg-color: #121212;
   --text-color: #ffffff;
-  --accent-color: #bb86fc;
+  --modal-color: #1e1e1e;
   --site-font: "Arial";
 }
 
@@ -35,7 +35,7 @@
   /* body */
   --bg-color: #0f172a;
   --text-color: #e0f2fe;
-  --accent-color: #38bdf8;
+  --modal-color: #0b3d91;
   --site-font: "Arial";
 }
 
@@ -100,6 +100,11 @@ body {
   border: 1px solid var(--border-color);
 }
 
+.card-body {
+  background-color: var(--modal-color);
+  border-radius: 5px;
+}
+
 .filter-panel {
   background-color: var(--modal-color);
 }
@@ -110,4 +115,9 @@ body {
   border-color: var(--border-color);
   
 }
+
+h5.list-task-title a {
+  color: inherit;
+}
+
 
