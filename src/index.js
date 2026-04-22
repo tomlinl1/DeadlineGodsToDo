@@ -8,6 +8,7 @@ import achievementRoutes from "./routes/achievementRoutes.js";
 import postRoutes from './routes/posts.js';
 import listRoutes from './routes/list.js';
 import calendarRoutes from "./routes/calendarRoutes.js";
+import loginRoutes from "./routes/loginRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.set("view engine", "ejs");
 app.use("/api/users", userRoutes);
 app.use("/api/achievements", achievementRoutes);
 app.use("/api/calendar", calendarRoutes);
+app.use("/api", loginRoutes);
 
 // Routes
 app.use("/", postRoutes);

@@ -5,8 +5,8 @@ const monthNames = [
 
 let currentDate = new Date(); // current date
 
-//window.CURRENT_USER_ID = localStorage.getItem("username");
-window.CURRENT_USER_ID = "admin"; // for testing
+localStorage.setItem("username", "admin"); // for testing purposes, set a default username in localStorage
+window.CURRENT_USER_ID = localStorage.getItem("username");
 
 const calendarBody = document.getElementById('calendar-body');
 const prevBtn = document.getElementById('prev-month');
@@ -20,9 +20,30 @@ const nextBtn = document.getElementById('next-month');
 		await fetchCalendarTasks(window.CURRENT_USER_ID); // fetch tasks for current user
 		renderCalendar(currentDate);
 		renderDueTasks(currentDate);
-		
+		addEventListeners();
 	});
 })();
+
+function addEventListeners() {
+	const modal = new bootstrap.Modal(document.getElementById('calendarModal'))
+	const modalTitle = document.getElementById('calendarModalLabel');
+	const modalLink = document.getElementById('modalDetailLink');
+
+	document.querySelectorAll('.task').forEach(task => {
+		task.addEventListener('click', (e) => {
+			console.log(e.target);
+
+			modalTitle.textContent = e.target.textContent; // set modal title to task title
+			let taskId = e.target.dataset.taskId;
+			modalLink.href = `/detail/${taskId}`; // set link to task edit page
+
+			modal.show();
+		})
+	});
+
+	console.log(modal);
+	console.log(document.querySelectorAll('.task'));
+}
 
 function renderCalendar(date) {
 	const month = date.getMonth();
@@ -114,9 +135,8 @@ function renderTasks() {
         // Todo: Create a better html structure for the task (e.g., include priority color, link if available, etc.)
         //
         taskDiv.className = `task priority-${taskPriority}`; // add priority class for styling
-        taskDiv.title = task.title;
         taskDiv.style.cursor = 'pointer';
-        taskDiv.dataset.taskId = task.task_id; // store task ID for potential future use (e.g., click handler)
+        taskDiv.dataset.taskId = task._id; // store task ID for potential future use (e.g., click handler)
         taskDiv.textContent = task.title;
 
         const taskContainer = cells[startIndex].querySelector('.tasks-container');
@@ -143,10 +163,9 @@ function renderDueTasks(date) {
 	dueTasks.forEach(task => { //render upcoming tasks
 		let newElement = document.createElement('li');
 		let taskPriority = task.priority || "low"; // default to 0 if priority is missing
-		newElement.className = `task priority-${taskPriority}`; // add priority class for styling
-		newElement.title = task.title;
+		newElement.className = `task priority-${taskPriority} list-group-item`; // add priority class for styling
 		newElement.style.cursor = 'pointer';
-		newElement.dataset.taskId = task.task_id; // store task ID for potential future use (e.g., click handler)
+		newElement.dataset.taskId = task._id; // store task ID for potential future use (e.g., click handler)
 		newElement.textContent = task.title;
 
 		upcomingBody.appendChild(newElement);
@@ -162,10 +181,9 @@ function renderDueTasks(date) {
 		overdueTasks.forEach(task => {
 			let newElement = document.createElement('li');
 			let taskPriority = task.priority || "low"; // default to 0 if priority is missing
-			newElement.className = `task priority-${taskPriority}`; // add priority class for styling
-			newElement.title = task.title;
+			newElement.className = `task priority-${taskPriority} list-group-item`; // add priority class for styling
 			newElement.style.cursor = 'pointer';
-			newElement.dataset.taskId = task.task_id; // store task ID for potential future use (e.g., click handler)
+			newElement.dataset.taskId = task._id; // store task ID for potential future use (e.g., click handler)
 			newElement.textContent = task.title;
 
 			overdueBody.appendChild(newElement);

@@ -20,7 +20,7 @@
             
             <!-- Add Task Button -->
             <div class="mb-3">
-                <button id="add-task-btn" class="btn btn-primary">Add Task</button>
+                <button id="add-task-btn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add Task</button>
             </div>
             
             <!-- Month Navigation -->
@@ -59,6 +59,96 @@
         </div>
     </div>
 
+    <!-- Bootstrap Modal for tasks -->
+    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="calendarModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <a id="modalDetailLink" href="">Go to Task</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- bootstrap modal for adding tasks-->
+    <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTaskModalLabel">Add Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                 <form>
+                    <!-- Task Title -->
+                    <div class="mb-3">
+                        <label class="form-label">Task Title</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+
+                    <!-- Due Date -->
+                    <div class="mb-3">
+                        <label class="form-label">Due Date</label>
+                        <input type="date" class="form-control" name="date" required>
+                    </div>
+
+                    <!-- Priority -->
+                     <div class="mb-3">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-3">
+                        <label class="form-label">Tags (comma-separated)</label>
+                        <input type="text" class="form-control" name="tags" placeholder="e.g. homework, math, exam">
+                    </div>
+
+                    <!-- Optional Reoccuring -->
+                    <div class="mb-3">
+                        <label class="form-label">Reoccuring (optional)</label>
+                        <select class="form-select form-select" aria-label=".form-select-sm example">
+                            <option selected>Not Reoccuring</option>
+                            <option value="1">Weekly</option>
+                            <option value="2">Bi-Weekly</option>
+                            <option value="3">Monthly</option>
+                            <option value="4">Yearly</option>
+                        </select>
+                    </div>
+
+                    <!-- Optional Milestones -->
+                    <div class="mb-3">
+                        <label class="form-label">Add Milestones (optional)</label>
+                        <select class="form-select form-select" aria-label=".form-select-sm example">
+                            <option selected>No Milestones</option>
+                            <option value="1">Halfway check</option>
+                            <option value="2">Weekly check</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button-->
+                     <button type="submit" class="btn btn-outline-secondary">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="/public/js/calendar.js"></script>
 </body>
 </html>
@@ -95,25 +185,22 @@
 
 <!-- Features that still need implimented
  - Now
-        -add post
-        -modals for tasks
+        -Functionallity of frequency and milestones in the add task modal
 -->
 
 <!-- Feature Ideas
- - reocurring tasks (weekly, monthly, yearly) (use tags so when a task reaches its due date it automatically creates the same task at a different time)
- - color customization
- - style customization
- - make change month arrows close together
- - highlight current day
- - drag and drop to change dates and length
- - canvas api/key or whatever it is to connect canvas
- - Week to week view
- - notifactions (icon in top)
- - topic of task (use tags)
- - milestones (tasks that are auto created when making a task and selecting add milestones)
-    - add task model has an option to add milestones 
-    - set the reoccuring times (weekly, biweekly, monthly)
-    - ideas for milestones
-        - a glorified checkbox 
-        - type into the milestone what you did
+-style improvements
+    - make change month arrows close together 
+    - highlight current day
+- color customization
+- style customization
+- improve modal looks
+    - Submit button lights up when required fields are filled
+- mark task as completed from modal
+- drag and drop to change dates and length
+- Week to week view
+- back to today button
+- ideas for milestones
+    - a glorified checkbox 
+    - type into the milestone what you did
 -->
