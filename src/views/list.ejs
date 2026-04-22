@@ -273,10 +273,14 @@
         url: '/complete/' + btn.data('id'),
         contentType: 'application/json',
         data: JSON.stringify({ username: username })
-      }).done(function () {
+      }).done(function (res) {
         // Disable button and strike through the title visually
         btn.prop('disabled', true).text('Done');
         btn.closest('li').find('h5 a').wrapInner('<s></s>');
+
+        if (res.newlyUnlocked && res.newlyUnlocked.length > 0) {
+          alert('🏆 Achievement unlocked: ' + res.newlyUnlocked.join(', '));
+        }
       }).fail(function () {
         alert('Could not complete task.');
       });
