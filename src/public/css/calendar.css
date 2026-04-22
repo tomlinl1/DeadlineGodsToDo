@@ -1,15 +1,17 @@
 /* Basic calendar styles */
-#calendar-body {
+.table {
   table-layout: fixed;
-  width: 100%;
 }
 
 #calendar-body td {
-  height: 100px;
   width: 100px;
-  overflow: hidden;
   vertical-align: top;
   padding: 6px;
+  position: relative;
+}
+
+.cell-content {
+  aspect-ratio: 4 / 3;
 }
 
 .day-number {
@@ -22,8 +24,22 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  flex: 1;
-  overflow-y: auto;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.task{
+  min-width: 0;
+  max-width: 100%;
+  border: 5px solid transparent;
+  border-color: aqua;
+  box-sizing: border-box;
+  display: block;
+  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* show day number slightly bold */
@@ -33,11 +49,15 @@
 
 /* muted cells for prev/next month (Bootstrap's text-muted already dims, this adds subtle bg) */
 .text-muted {
-  color: rgba(0,0,0,0.45) !important;
+  color: rgba(148, 148, 148, 0.45) ;
   background-color: #f8f9fa;
 }
 
 /* indicate hover for clickable days */
 .calendar-day:hover {
   background-color: rgba(0,0,0,0.03);
+}
+
+.task-due-indicator{
+  min-height: 50vh;
 }

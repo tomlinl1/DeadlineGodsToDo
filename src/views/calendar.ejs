@@ -14,38 +14,49 @@
 </head>
 <body>
     <%- include('nav.ejs') %>
-    <div class="container mt-4">
-        
-        <!-- Add Task Button -->
-        <div class="mb-3">
-            <button id="add-task-btn" class="btn btn-primary">Add Task</button>
-        </div>
-        
-        <!-- Month Navigation -->
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <button id="prev-month" class="btn btn-secondary">&lt;</button>
-            <span id="month-year" class="h5">Placeholder Month</span>
-            <button id="next-month" class="btn btn-secondary">&gt;</button>
-        </div>            
+    <div class="d-flex">
+        <!-- Main Content-->
+        <div class="container mt-4 flex-grow-1 p-3" style="flex: 0 0 80%;">
+            
+            <!-- Add Task Button -->
+            <div class="mb-3">
+                <button id="add-task-btn" class="btn btn-primary">Add Task</button>
+            </div>
+            
+            <!-- Month Navigation -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <button id="prev-month" class="btn btn-secondary">&lt;</button>
+                <span id="month-year" class="h5">Placeholder Month</span>
+                <button id="next-month" class="btn btn-secondary">&gt;</button>
+            </div>            
 
-        <!-- Calendar Grid -->
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
-                </tr>
-            </thead>
-            <tbody id="calendar-body"></tbody>
-        </table>
+            <!-- Calendar Grid -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body"></tbody>
+            </table>
+        </div>
 
         <!-- Upcoming & Overdue Tasks Sidebar-->
-         <div class="mt-4">
-            <h3>Upcoming Tasks</h3>
-         </div>
+        <div id="calendar-sidebar" class="p-3" style="flex: 0 0 20%;">
+            <div class="mt-4 task-due-indicator">
+                <h3 class="task-due-indicator-header">Upcoming Tasks</h3>
+                <ul id="upcoming-tasks-body" class="task-due-indicator-body list-group">
+                    
+                </ul>
+            </div>
 
-         <div class="mt-2">
-            <h3>Overdue Tasks</h3>
-         </div>
+            <div class="mt-2 task-due-indicator">
+                <h3 class="task-due-indicator-header">Overdue Tasks</h3>
+                <ul id="overdue-tasks-body" class="task-due-indicator-body list-group">
+                    
+                </ul>
+            </div>
+        </div>
     </div>
 
     <script src="/public/js/calendar.js"></script>
@@ -84,20 +95,19 @@
 
 <!-- Features that still need implimented
  - Now
-        -Posts to tasks
-        -Get user 
-        -get tasks from user
         -add post
+        -modals for tasks
 -->
 
 <!-- Feature Ideas
  - reocurring tasks (weekly, monthly, yearly) (use tags so when a task reaches its due date it automatically creates the same task at a different time)
  - color customization
  - style customization
+ - make change month arrows close together
+ - highlight current day
  - drag and drop to change dates and length
  - canvas api/key or whatever it is to connect canvas
  - Week to week view
- - upcoming & overdue tasks (right side of calendar)
  - notifactions (icon in top)
  - topic of task (use tags)
  - milestones (tasks that are auto created when making a task and selecting add milestones)

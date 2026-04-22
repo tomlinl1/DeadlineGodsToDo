@@ -121,4 +121,18 @@ router.get("/listjson", async (req, res) => {
   }
 });
 
+router.get("/api/:username", async (req, res) => {
+  const username = req.params.username;
+
+    try {
+        // Get tasks for user, sorted by priority (highest first)
+        const tasks = await Post.find({ username: username }).sort({ priority: -1 }); // sort by priority descending
+        res.json(tasks);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 export default router;

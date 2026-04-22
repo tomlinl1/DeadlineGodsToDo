@@ -5,7 +5,8 @@ const monthNames = [
 
 let currentDate = new Date(); // current date
 
-window.CURRENT_USER_ID = 1 // for testing
+//window.CURRENT_USER_ID = localStorage.getItem("username");
+window.CURRENT_USER_ID = "admin"; // for testing
 
 const calendarBody = document.getElementById('calendar-body');
 const prevBtn = document.getElementById('prev-month');
@@ -16,8 +17,9 @@ const nextBtn = document.getElementById('next-month');
 	document.addEventListener('DOMContentLoaded', async 	() => {
 		prevBtn.addEventListener('click', () => changeMonth(-1));
 		nextBtn.addEventListener('click', () => changeMonth(1));
-		await fetchCalendarTasks(1); // fetch tasks for current user
+		await fetchCalendarTasks(window.CURRENT_USER_ID); // fetch tasks for current user
 		renderCalendar(currentDate);
+		renderDueTasks(currentDate);
 		
 	});
 })();
@@ -41,6 +43,9 @@ function renderCalendar(date) {
 		const dayOffset = i - firstDay + 1; // 1 means first of month when i == firstDay
 		const cellDate = new Date(year, month, dayOffset);
 		const isCurrentMonth = cellDate.getMonth() === month;
+		
+		const cellContent = document.createElement('div');
+		cellContent.className = 'cell-content';
 
 		const cell = document.createElement('td');                  // create the element in the cell
 		cell.classList.add('calendar-day');                         // class of the days
@@ -55,8 +60,10 @@ function renderCalendar(date) {
 		const tasksDiv = document.createElement('div');
 		tasksDiv.className = 'tasks-container';
 
-		cell.appendChild(dayDiv);
-		cell.appendChild(tasksDiv);
+		cellContent.appendChild(dayDiv);
+		cellContent.appendChild(tasksDiv);
+
+		cell.appendChild(cellContent);
 
 		cells.push(cell);
 	}
@@ -82,18 +89,18 @@ function renderTasks() {
 
     const tasks = window.CALENDAR_TASKS.slice().sort((a, b) => b.priority - a.priority); // sort by priority descending
     const cells = window.calendarCells;
-    const taskLimit = 3; 
+    //const taskLimit = 3; 
 
     tasks.forEach(task => {
-        const startDate = task.start_date.slice(0, 10);
-        const endDate = task.end_date ? task.end_date.slice(0, 10) : startDate;
+        const startDate = task.date.slice(0, 10);
+        //const endDate = task.end_date ? task.end_date.slice(0, 10) : startDate;
         const startCell = cells.find(c => c.dataset.date === startDate);
 
         const startIndex = cells.findIndex(c => c.dataset.date === startDate);
         if (startIndex === -1) return; // task starts outside calendar range
         
-        const endIndex = cells.findIndex(c => c.dataset.date === endDate);
-        const actualEndIdx = (endIndex === -1) ? startIndex : endIndex;
+        //const endIndex = cells.findIndex(c => c.dataset.date === endDate);
+        //const actualEndIdx = (endIndex === -1) ? startIndex : endIndex;
 
         let canRender = true;
 		const taskPriority = task.priority || 0; // default to 0 if priority is missing
@@ -119,6 +126,52 @@ function renderTasks() {
 
 }
 
+function renderDueTasks(date) {
+	const month = date.getMonth();
+	const nextMonth = (month + 1) % 12;
+	const year = date.getFullYear();
+	const upcomingBody = document.getElementById('upcoming-tasks-body');
+	const overdueBody = document.getElementById('overdue-tasks-body');
+
+	let dueTasks = window.CALENDAR_TASKS.filter(task => {
+		const taskDate = new Date(task.date);
+		return ( taskDate.getMonth() === month || taskDate.getMonth() === nextMonth ) && taskDate.getFullYear() === year;
+	});
+
+	dueTasks.sort((a, b) => new Date(a.date) - new Date(b.date)); // sort by date ascending
+
+	dueTasks.forEach(task => { //render upcoming tasks
+		let newElement = document.createElement('li');
+		let taskPriority = task.priority || "low"; // default to 0 if priority is missing
+		newElement.className = `task priority-${taskPriority}`; // add priority class for styling
+		newElement.title = task.title;
+		newElement.style.cursor = 'pointer';
+		newElement.dataset.taskId = task.task_id; // store task ID for potential future use (e.g., click handler)
+		newElement.textContent = task.title;
+
+		upcomingBody.appendChild(newElement);
+	});
+
+	let overdueTasks = window.CALENDAR_TASKS.filter(task => {
+		const taskDate = new Date(task.date);
+		return currentDate > taskDate;
+	});
+
+	if (!overdueTasks.length === 0) { // render overdue tasks if there are any
+		overdueTasks.sort((a, b) => new Date(a.date) - new Date(b.date)); // sort by date ascending
+		overdueTasks.forEach(task => {
+			let newElement = document.createElement('li');
+			let taskPriority = task.priority || "low"; // default to 0 if priority is missing
+			newElement.className = `task priority-${taskPriority}`; // add priority class for styling
+			newElement.title = task.title;
+			newElement.style.cursor = 'pointer';
+			newElement.dataset.taskId = task.task_id; // store task ID for potential future use (e.g., click handler)
+			newElement.textContent = task.title;
+
+			overdueBody.appendChild(newElement);
+		});
+	}
+}
 
 function changeMonth(offset) {
 	currentDate.setMonth(currentDate.getMonth() + offset);
@@ -127,7 +180,7 @@ function changeMonth(offset) {
 
 async function fetchCalendarTasks(userId) {
 	try {
-		const response = await fetch(`/api/calendar/${userId}`);
+		const response = await fetch(`/api/${userId}`);
 		if (!response.ok) {
 			throw new Error(`Error fetching tasks: ${response.statusText}`);
 		}
