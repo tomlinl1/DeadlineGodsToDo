@@ -1,7 +1,126 @@
-:root{
-  --site-font: Arial;
+:root {
+  /* nav */
+  --nav-bg: #f8f9fa;
+  --nav-text: #000;
+
+  /* body */
+  --modal-color: #f8f9fa;
+  --border-color: black;
+  --bg-color: #ffffff;
+  --text-color: #000000;
 }
 
-*{
-  font-family: var(--site-font);
+/* THEMES */
+
+/* Dark Theme */
+[data-theme="dark"] {
+  /* nav */
+  --nav-bg: #1e1e1e;
+  --nav-text: #fff;
+
+  /* body */
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --modal-color: #1e1e1e;
+  --site-font: "Arial";
 }
+
+/* Ocean Theme */
+[data-theme="ocean"] {
+  /* nav */
+  --nav-bg: #0b3d91;
+  --nav-text: #ffffff;
+
+  /* body */
+  --bg-color: #0f172a;
+  --text-color: #e0f2fe;
+  --modal-color: #0b3d91;
+  --site-font: "Arial";
+}
+
+/* Sunset Theme */
+[data-theme="porple"] {
+  --nav-bg: #4B2C5E;
+  --nav-text: #fff;
+
+  --border-color: #2D3047;
+  --bg-color: #6f567e;
+  --modal-color: #5d416e;
+  --text-color: #fff;
+}
+
+/* Discord */
+[data-theme="discord"] {
+  --nav-bg: #2C2D32;
+  --nav-text: #fff;
+
+  --border-color: #2C2D32;
+  --bg-color: #323339;
+  --modal-color: #3A3B41;
+  --text-color: #fff;
+}
+
+/* Mint */
+[data-theme="mint"] {
+  --nav-bg: #1c515d;
+  --nav-text: #fff;
+
+  --border-color: #e5fdf6;
+  --bg-color: #aae5a4;
+  --modal-color: #2b8e79;
+  --text-color: #fff;
+  
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--site-font);
+  font-family: Arial, sans-serif;
+}
+
+.navbar-theme {
+  background-color: var(--nav-bg) !important;
+}
+
+.navbar-theme .nav-link,
+.navbar-theme .navbar-brand {
+  color: var(--nav-text) !important;
+}
+
+.modal-content {
+  background-color: var(--modal-color);
+  color: var(--text-color)
+}
+
+.card {
+  background-color: var(--modal-color);
+  color: var(--site-font);
+  border: 1px solid var(--border-color);
+}
+
+.card-body {
+  background-color: var(--bg-color);
+  border-radius: 5px;
+}
+
+.filter-panel {
+  background-color: var(--modal-color);
+}
+
+.list-group-item {
+  background-color: var(--modal-color);
+  color: var(--site-font);
+  border-color: var(--border-color);
+  
+}
+
+h5.list-task-title a {
+  color: inherit;
+}
+
+.detail-card {
+  background-color: var(--modal-color);
+}
+
+

@@ -35,7 +35,15 @@ router.get("/:userId", async (req, res) => {
       };
     });
 
-    res.json(achievements);
+    res.json({
+      achievements,
+      counters: {
+        total_tasks: user.total_tasks,
+        total_tasks_low: user.total_tasks_low,
+        total_tasks_medium: user.total_tasks_medium,
+        total_tasks_high: user.total_tasks_high,
+      }
+    });
 
   } catch (err) {
     console.error(err);
@@ -78,19 +86,20 @@ router.post("/:userId/complete/:achievementId", async (req, res) => {
     const achievement = await Achievement.findOne({ id: achievementId });
     if (achievement) user.totalPoints += Number(achievement.points);
 
-    //Mapping achevements to a font
-    const fontUnlocks = {
-      ach_01: "Verdana",
-      ach_02: "Arial",
-      ach_03: "Georgia",
-      ach_04: "Courier New",
-      ach_05: "Times New Roman"
+    //Mapping achevements to a theme
+    const themeUnlocks = {
+      ach_01: "default",
+      ach_02: "dark",
+      ach_03: "ocean",
+      ach_04: "porple",
+      ach_05: "discord",
+      ach_06: "mint"
     };
 
-    const unlockedFont = fontUnlocks[achievementId];
+    const unlockedTheme = themeUnlocks[achievementId];
 
-    if (unlockedFont && !user.customization.unlockedFonts.includes(unlockedFont)) {
-      user.customization.unlockedFonts.push(unlockedFont);
+    if (unlockedTheme && !user.customization.unlockedThemes.includes(unlockedTheme)) {
+      user.customization.unlockedThemes.push(unlockedTheme);
     }
     await user.save();
 
