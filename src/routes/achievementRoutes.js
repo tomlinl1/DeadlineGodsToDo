@@ -35,7 +35,15 @@ router.get("/:userId", async (req, res) => {
       };
     });
 
-    res.json(achievements);
+    res.json({
+      achievements,
+      counters: {
+        total_tasks: user.total_tasks,
+        total_tasks_low: user.total_tasks_low,
+        total_tasks_medium: user.total_tasks_medium,
+        total_tasks_high: user.total_tasks_high,
+      }
+    });
 
   } catch (err) {
     console.error(err);
