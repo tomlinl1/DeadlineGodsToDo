@@ -94,6 +94,18 @@
     ach_09: { field: "total_tasks",        target: 100 },
   };
 
+  const achievementUnlocks = {
+    ach_01: "Default theme",
+    ach_02: "Dark theme",
+    ach_03: "Ocean theme",
+    ach_04: "Porple theme",
+    ach_05: "Discord theme",
+    ach_06: "Mint theme",
+    ach_07: null,
+    ach_08: null,
+    ach_09: null,
+  };
+
   // Fetch achievements by user_id
   async function fetchAchievementsByUsername(username) {
   try {
@@ -118,11 +130,11 @@
 }
 
   function renderAchievements(type) {
-  const container = document.getElementById('achievementModalBody');
-  container.querySelectorAll('.collapse').forEach(el => {
-    const instance = bootstrap.Collapse.getInstance(el);
-    if (instance) instance.dispose();
-  });
+    const container = document.getElementById('achievementModalBody');
+    container.querySelectorAll('.collapse').forEach(el => {
+      const instance = bootstrap.Collapse.getInstance(el);
+      if (instance) instance.dispose();
+    });
 
   container.innerHTML = "";
 
@@ -171,10 +183,16 @@
       `;
 
       // Collapse body with description
+      const unlock = achievementUnlocks[a.id];
       const collapseDiv = document.createElement('div');
       collapseDiv.id = `achievement-${a.id}`;
       collapseDiv.classList.add('collapse');
-      collapseDiv.innerHTML = `<div class="card card-body py-2 mt-1"><small>${a.description} — <strong>${a.points} pts</strong></small></div>`;
+      collapseDiv.innerHTML = `
+        <div class="card card-body py-2 mt-1">
+          <small>${a.description} — <strong>${a.points} pts</strong></small>
+          ${unlock ? `<br><small>Unlocks: ${unlock}</small>` : ''}
+        </div>
+      `;
 
       wrapper.innerHTML = '';
       wrapper.appendChild(header);
