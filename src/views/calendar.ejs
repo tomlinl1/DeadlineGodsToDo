@@ -86,7 +86,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                 <form>
+                 <form action="/add" method="post">
+                    
+                    <!-- Hidden Username to be posted to database -->
+                    <input type="hidden" name="username" id="usernameInput">
+                    
                     <!-- Task Title -->
                     <div class="mb-3">
                         <label class="form-label">Task Title</label>
@@ -115,7 +119,7 @@
                         <input type="text" class="form-control" name="tags" placeholder="e.g. homework, math, exam">
                     </div>
 
-                    <!-- Optional Reoccuring -->
+                    <!-- Optional Reoccuring 
                     <div class="mb-3">
                         <label class="form-label">Reoccuring (optional)</label>
                         <select class="form-select form-select" aria-label=".form-select-sm example">
@@ -125,9 +129,9 @@
                             <option value="3">Monthly</option>
                             <option value="4">Yearly</option>
                         </select>
-                    </div>
+                    </div> -->
 
-                    <!-- Optional Milestones -->
+                    <!-- Optional Milestones 
                     <div class="mb-3">
                         <label class="form-label">Add Milestones (optional)</label>
                         <select class="form-select form-select" aria-label=".form-select-sm example">
@@ -135,7 +139,7 @@
                             <option value="1">Halfway check</option>
                             <option value="2">Weekly check</option>
                         </select>
-                    </div>
+                    </div> -->
 
                     <!-- Submit Button-->
                      <button type="submit" class="btn btn-outline-secondary">Submit</button>
@@ -150,6 +154,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="/public/js/calendar.js"></script>
+    <script>
+        document.getElementById("usernameInput").value = username;
+    </script>
 </body>
 </html>
 
