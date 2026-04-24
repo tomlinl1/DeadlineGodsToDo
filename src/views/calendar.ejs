@@ -25,9 +25,13 @@
             
             <!-- Month Navigation -->
             <div class="d-flex justify-content-between align-items-center mb-2">
-                <button id="prev-month" class="btn btn-secondary">&lt;</button>
+                <div class="month-nav-buttons">
+                    <button id="prev-month" class="btn btn-secondary">&lt;</button>
+                    <button id="next-month" class="btn btn-secondary">&gt;</button>
+                </div>
                 <span id="month-year" class="h5">Placeholder Month</span>
-                <button id="next-month" class="btn btn-secondary">&gt;</button>
+                <div></div> <!-- empty div to balance the flex layout -->
+                
             </div>            
 
             <!-- Calendar Grid -->
@@ -90,7 +94,7 @@
                     
                     <!-- Hidden Username to be posted to database -->
                     <input type="hidden" name="username" id="usernameInput">
-                    
+
                     <!-- Task Title -->
                     <div class="mb-3">
                         <label class="form-label">Task Title</label>
@@ -160,36 +164,6 @@
 </body>
 </html>
 
-<!-- What am I looking for in a calender? 
-- Show full month
-- Each day can contain a list of tasks
-- Switch between months (1 month before and up to futhest task or 3 months after)
-- Click on a day to show all tasks for that day in a modal
-- Click on a task to go to that task
-- uses bootstrap 5 and jquery
--->
-
-<!-- Calendar framework
-- calendar div
-    - rows and columns (7 x 6 the days in the calendar that are not apart of the month will have their numbers grayed out)
-    - use JS to generate the proper days of the month
-    - create cells for eachday 
-
-        LAYOUT OF CELLS
-        - each cell will be numbered and have a box in them that shows the title of the task 
-            - colors can be a setting or priority level thing
-            - there can be a max of 3 tasks shown within one cell (if there are more there will be an icon to indicate that)
-            - the order of tasks is determined by 
-                - is there an extended task to show
-                - priority level
-                
-        EVENTS 
-        - clicking on the cell without clicking on a task will show all tasks for that day in a modal
-        - clicking on a task will go to that task (depending on how we implement tasks, there may be a link to the task)
-            - (if there is no task to link to then we can just show the task details in a modal as well)
-            - for now it will just be a modal with the title, date, and priority of the task  
--->
-
 <!-- Features that still need implimented
  - Now
         -Functionallity of frequency and milestones in the add task modal
@@ -197,7 +171,6 @@
 
 <!-- Feature Ideas
 -style improvements
-    - make change month arrows close together 
     - highlight current day
 - color customization
 - style customization
