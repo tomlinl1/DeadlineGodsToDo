@@ -8,7 +8,6 @@
   --border-color: black;
   --bg-color: #ffffff;
   --text-color: #000000;
-  --accent-color: #007bff;
 }
 
 /* THEMES */
@@ -95,13 +94,13 @@ body {
 }
 
 .card {
-  background-color: var(--bg-color);
+  background-color: var(--modal-color);
   color: var(--site-font);
   border: 1px solid var(--border-color);
 }
 
 .card-body {
-  background-color: var(--modal-color);
+  background-color: var(--bg-color);
   border-radius: 5px;
 }
 
@@ -118,6 +117,10 @@ body {
 
 h5.list-task-title a {
   color: inherit;
+}
+
+.detail-card {
+  background-color: var(--modal-color);
 }
 
 

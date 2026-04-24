@@ -30,9 +30,11 @@
         <li class="nav-item"><a class="nav-link" href="/list" id="listLink">List</a></li>
         <li class="nav-item"><a class="nav-link" href="#" id="openAchievements">Achievements</a></li>
         <li class="nav-item"><a class="nav-link" href="/calendar">Calendar</a></li>
-        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="/login" id="authLink">Login</a></li>
         <li class="nav-item"><a class="nav-link" href="/customize">Customize</a></li>
+        <li class="nav-item d-flex align-items-center ms-auto">Logged in as:&nbsp;<strong id="navUsername"></strong></li>
       </ul>
+      
     </div>
   </div>
 </nav>
@@ -45,8 +47,9 @@
       <!-- Header -->
       <div class="modal-header">
         <div>
-          <h5 class="modal-title mb-1">Achievements</h5>
-
+          <h5 class="modal-title mb-1">Achievements </h5>
+          <span id="userTotalPoints">Achievement Points: 0</span>
+          <br>
           <!-- Filter buttons -->
           <div class="btn-group btn-group-sm">
             <button class="btn btn-secondary filter" data-type="all">All</button>
@@ -57,8 +60,12 @@
           </div>
         </div>
 
+        <!-- Points-->
+        
+
         <!-- Close button -->
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        
       </div>
 
       <!-- Body -->
@@ -81,6 +88,7 @@
       if (!userRes.ok) throw new Error("User not found");
       const user = await userRes.json();
 
+      document.getElementById("userTotalPoints").textContent = `${user.total_points} Achievement Points`;
       const achievementsRes = await fetch(`http://localhost:5500/api/achievements/${user._id}`);
       if (!achievementsRes.ok) throw new Error("Could not fetch achievements");
       achievementsData = await achievementsRes.json();
@@ -147,6 +155,18 @@
   (function () {
 
     const username = localStorage.getItem("username");
+    document.getElementById("navUsername").textContent = username || "Guest";
+
+    const authLink = document.getElementById("authLink");
+    if (username) {
+      authLink.textContent = "Logout";
+      authLink.href = "#";
+      authLink.addEventListener("click", () => {
+        localStorage.removeItem("username");
+        localStorage.removeItem("theme");
+        window.location.href = "/";
+      });
+    }
 
     // -----------------------------
     // APPLY CACHED THEME (fast, no flicker)
@@ -159,11 +179,14 @@
     // -----------------------------
     // FIX NAV LINKS
     // -----------------------------
+    const listLink = document.getElementById("listLink");
     if (username) {
-      const listLink = document.getElementById("listLink");
-      if (listLink) {
-        listLink.href = `/list?username=${encodeURIComponent(username)}`;
-      }
+      listLink.href = `/list?username=${encodeURIComponent(username)}`;
+    } else {
+      listLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = "/login";
+      });
     }
 
     // -----------------------------

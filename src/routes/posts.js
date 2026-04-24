@@ -155,6 +155,7 @@ router.post("/complete/:id", async (req, res) => {
       { id: "ach_06", condition: total_tasks_medium >= 1 },
       { id: "ach_07", condition: total_tasks_medium >= 5 },
       { id: "ach_08", condition: total_tasks_high >= 1 },
+      { id: "ach_09", condition: total_tasks >= 100},
     ];
 
     const newlyUnlocked = [];
@@ -195,7 +196,7 @@ router.post("/complete/:id", async (req, res) => {
         user.customization.unlockedThemes.push(theme);
       }
 
-      newlyUnlocked.push(trigger.id);
+      newlyUnlocked.push(achievement.name);
     }
 
     await user.save();
