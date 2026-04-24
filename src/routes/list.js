@@ -91,7 +91,7 @@ router.get('/', async (req, res) => {
 
     const [allTags, savedViews] = await Promise.all([
       getAllTags(),
-      SavedView.find({}).sort({ pinned: -1, name: 1 }),
+      SavedView.find({ username: username || '' }).sort({ pinned: -1, name: 1 }),
     ]);
 
     res.render('list.ejs', {
@@ -108,6 +108,7 @@ router.get('/', async (req, res) => {
       sortOrder: sortOrder || 'asc',
       allTags,
       savedViews,
+      username: username || '',
     });
   } catch (e) {
     console.error('Error fetching posts:', e);
@@ -123,6 +124,7 @@ router.post('/views/save', async (req, res) => {
     const newView = new SavedView({
       _id: await getNextId(),
       name: req.body.viewName,
+      username: req.body.username || '',
       filters: {
         tag: req.body.tag || '',
         priority: req.body.priority || '',
@@ -135,7 +137,7 @@ router.post('/views/save', async (req, res) => {
       pinned: false,
     });
     await newView.save();
-    res.redirect('/list');
+    res.redirect('/list?username=' + (req.body.username || ''));
   } catch (e) {
     console.error('Error saving view:', e);
     res.status(500).send('Error saving view');
@@ -154,6 +156,7 @@ router.get('/views/:id/load', async (req, res) => {
     }
     if (view.sortBy) params.set('sortBy', view.sortBy);
     if (view.sortOrder) params.set('sortOrder', view.sortOrder);
+    if (view.username) params.set('username', view.username);
 
     res.redirect('/list?' + params.toString());
   } catch (e) {
@@ -166,7 +169,7 @@ router.get('/views/:id/load', async (req, res) => {
 router.post('/views/:id/pin', async (req, res) => {
   try {
     await SavedView.findByIdAndUpdate(parseInt(req.params.id), { pinned: true });
-    res.redirect('/list');
+    res.redirect('/list?username=' + (req.body.username || ''));
   } catch (e) {
     console.error('Error pinning view:', e);
     res.status(500).send('Error pinning view');
@@ -177,7 +180,7 @@ router.post('/views/:id/pin', async (req, res) => {
 router.post('/views/:id/unpin', async (req, res) => {
   try {
     await SavedView.findByIdAndUpdate(parseInt(req.params.id), { pinned: false });
-    res.redirect('/list');
+    res.redirect('/list?username=' + (req.body.username || ''));
   } catch (e) {
     console.error('Error unpinning view:', e);
     res.status(500).send('Error unpinning view');
@@ -188,7 +191,7 @@ router.post('/views/:id/unpin', async (req, res) => {
 router.delete('/views/:id/delete', async (req, res) => {
   try {
     await SavedView.findByIdAndDelete(parseInt(req.params.id));
-    res.redirect('/list');
+    res.redirect('/list?username=' + (req.body.username || ''));
   } catch (e) {
     console.error('Error deleting view:', e);
     res.status(500).send('Error deleting view');

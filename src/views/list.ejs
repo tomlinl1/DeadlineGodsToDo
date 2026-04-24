@@ -47,6 +47,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: inherit;
     }
   </style>
 </head>
@@ -84,6 +85,7 @@
     <!-- Filter Panel -->
     <div class="filter-panel">
       <form method="GET" action="/list" id="filterForm">
+        <input type="hidden" name="username" id="filterUsernameInput">
         <div class="row g-2 align-items-end">
           <div class="col-md-2">
             <label class="form-label"><small>Tag</small></label>
@@ -131,13 +133,14 @@
             <button type="submit" class="btn btn-primary btn-sm w-100">Filter</button>
           </div>
         </div>
-        <a href="/list" class="btn btn-link btn-sm mt-2 p-0">Clear Filters</a>
+        <a href="/list?username=<%= username %>" class="btn btn-link btn-sm mt-2 p-0 text-decoration-none text-reset">Clear Filters</a>
       </form>
     </div>
 
     <!-- Save Current View -->
     <div class="mb-3">
       <form method="POST" action="/list/views/save" class="row g-2 align-items-center">
+        <input type="hidden" name="username" id="saveViewUsernameInput">
         <input type="hidden" name="tag" value="<%= filters.tag || '' %>">
         <input type="hidden" name="priority" value="<%= filters.priority || '' %>">
         <input type="hidden" name="dateFrom" value="<%= filters.dateFrom || '' %>">
@@ -161,7 +164,7 @@
         <div class="saved-views-list list-group list-group-flush">
           <% savedViews.forEach(function(view) { %>
             <div class="list-group-item d-flex justify-content-between align-items-center py-1">
-              <a href="/list/views/<%= view._id %>/load">
+              <a href="/list/views/<%= view._id %>/load" class="text-decoration-none text-reset">
                 <%= view.name %>
                 <% if (view.pinned) { %>
                   <span class="badge bg-primary pinned-badge">Pinned</span>
@@ -170,14 +173,17 @@
               <div class="btn-group btn-group-sm" role="group">
                 <% if (!view.pinned) { %>
                   <form method="POST" action="/list/views/<%= view._id %>/pin" class="m-0">
+                    <input type="hidden" name="username" value="<%= username %>">
                     <button type="submit" class="btn btn-primary py-0">Pin</button>
                   </form>
                 <% } else { %>
                   <form method="POST" action="/list/views/<%= view._id %>/unpin" class="m-0">
+                    <input type="hidden" name="username" value="<%= username %>">
                     <button type="submit" class="btn btn-secondary py-0">Unpin</button>
                   </form>
                 <% } %>
                 <form method="POST" action="/list/views/<%= view._id %>/delete?_method=DELETE" class="m-0">
+                  <input type="hidden" name="username" value="<%= username %>">
                   <button type="submit" class="btn btn-danger py-0">X</button>
                 </form>
               </div>
@@ -309,7 +315,7 @@
 
   <script>
     let username = localStorage.getItem("username");
-    document.querySelectorAll('#usernameInput').forEach(el => {
+    document.querySelectorAll('#usernameInput, #filterUsernameInput, #saveViewUsernameInput').forEach(el => {
       el.value = username;
     });
   </script>
