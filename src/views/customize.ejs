@@ -15,14 +15,15 @@
       <h3>Customize Appearance</h3>
 
       <div class="mt-3">
-        <label class="form-label">Font</label>
+        <label class="form-label">Theme</label>
 
-        <select id="fontSelect" class="form-select" style="max-width:300px">
-          <option value="Arial">Arial</option>
-          <option value="Georgia">Georgia</option>
-          <option value="Courier New">Courier New</option>
-          <option value="Verdana">Verdana</option>
-          <option value="Times New Roman">Times New Roman</option>
+        <select id="themeSelect" class="form-select" style="max-width:300px">
+          <option value="default">Default</option>
+          <option value="dark">Dark</option>
+          <option value="ocean">Ocean</option>
+          <option value="porple">Porple</option>
+          <option value="discord">Discord</option>
+          <option value="mint">Mint</option>
         </select>
       </div>
     </div>
@@ -30,88 +31,93 @@
     <script>
       (function () {
 
-        const select = document.getElementById("fontSelect");
+        const select = document.getElementById("themeSelect");
         const username = localStorage.getItem("username");
 
         // -----------------------------
-        // Apply font instantly to page
+        // Apply theme instantly to page
         // -----------------------------
-        function applyFont(font) {
-          document.documentElement.style.setProperty("--site-font", font);
+      
+        function applyTheme(theme) {
+          document.documentElement.setAttribute("data-theme", theme);
         }
 
-        // ⭐ NEW: LOCK / UNLOCK DROPDOWN BASED ON ACHIEVEMENTS
-        function updateDropdown(user) {
-          const unlocked = user.customization?.unlockedFonts || [];
+        // LOCK / UNLOCK DROPDOWN BASED ON ACHIEVEMENTS
+        function updateThemeDropdown(user) {
+          const unlocked = user.customization?.unlockedThemes || [];
 
           Array.from(select.options).forEach(option => {
-            const font = option.value;
+            const theme = option.value;
 
-            const isUnlocked = unlocked.includes(font);
+            const isUnlocked = unlocked.includes(theme);
 
             option.disabled = !isUnlocked;
 
             // reset text every time (VERY IMPORTANT)
-            option.textContent = isUnlocked ? font : `${font} 🔒`;
+            option.textContent = isUnlocked ? theme : `${theme} 🔒`;
           });
         }
 
         // -----------------------------
         // LOAD USER DATA FROM MONGODB
         // -----------------------------
-        async function loadUserFont() {
+        async function loadUserTheme() {
           try {
             const res = await fetch(`/api/users?user_id=${username}`);
             const user = await res.json();
 
-            const font = user.customization?.font || "Arial";
+            const theme = user.customization?.activeTheme || "default";
 
-            select.value = font;
-            applyFont(font);
+            select.value = theme;
 
-            // ⭐ THIS CONNECTS ACHIEVEMENTS → UI
-            updateDropdown(user);
+            // lock/unlock UI
+            updateThemeDropdown(user);
 
           } catch (err) {
-            console.error("Failed to load font:", err);
+            console.error("Failed to load theme:", err);
 
-            select.value = "Arial";
-            applyFont("Arial");
+            select.value = "default";
+            
+            applyTheme("default");
           }
         }
 
         // -----------------------------
-        // SAVE FONT TO MONGODB
+        // SAVE THEME TO MONGODB
         // -----------------------------
-        async function saveFont(font) {
+        async function saveTheme(theme) {
           try {
-            await fetch(`/api/users/${username}/customization/font`, {
+            await fetch(`/api/users/${username}/customization/theme`, {
               method: "PATCH",
               headers: {
                 "Content-Type": "application/json"
               },
-              body: JSON.stringify({ font })
+              body: JSON.stringify({ theme })
             });
 
           } catch (err) {
-            console.error("Failed to save font:", err);
+            console.error("Failed to save theme:", err);
           }
         }
 
         // -----------------------------
-        // HANDLE USER CHANGES FONT
+        // HANDLE USER CHANGES THEME
         // -----------------------------
         select.addEventListener("change", async () => {
-          const font = select.value;
+          const theme = select.value;
 
-          applyFont(font);       // instant UI update
-          await saveFont(font);  // persist to MongoDB
+          // apply
+          applyTheme(theme);
+          localStorage.setItem("theme", theme);
+          
+          // save in DB
+          await saveTheme(theme)
         });
 
         // -----------------------------
         // INIT PAGE
         // -----------------------------
-        loadUserFont();
+        loadUserTheme();
 
       })();
     </script>

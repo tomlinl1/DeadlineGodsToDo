@@ -47,6 +47,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      color: inherit;
     }
   </style>
 </head>
@@ -59,10 +60,10 @@
 
     <!-- Auto List Buttons -->
     <div class="smart-nav mb-3">
-      <a href="/list?view=today" class="btn btn-outline-warning btn-sm <%= activeView === 'today' ? 'active' : '' %>">Today</a>
-      <a href="/list?view=upcoming" class="btn btn-outline-success btn-sm <%= activeView === 'upcoming' ? 'active' : '' %>">Upcoming</a>
-      <a href="/list?view=overdue" class="btn btn-outline-danger btn-sm <%= activeView === 'overdue' ? 'active' : '' %>">Overdue</a>
-      <a href="/list" class="btn btn-outline-secondary btn-sm <%= activeView === 'all' ? 'active' : '' %>">All Tasks</a>
+      <a href="/list?view=today" class="btn btn-warning btn-sm <%= activeView === 'today' ? 'active' : '' %>">Today</a>
+      <a href="/list?view=upcoming" class="btn btn-success btn-sm <%= activeView === 'upcoming' ? 'active' : '' %>">Upcoming</a>
+      <a href="/list?view=overdue" class="btn btn-danger btn-sm <%= activeView === 'overdue' ? 'active' : '' %>">Overdue</a>
+      <a href="/list" class="btn btn-secondary btn-sm <%= activeView === 'all' ? 'active' : '' %>">All Tasks</a>
     </div>
 
     <!-- Search Bar -->
@@ -77,13 +78,14 @@
         <input type="hidden" name="dateTo" value="<%= filters.dateTo || '' %>">
         <input type="hidden" name="sortBy" value="<%= sortBy || 'date' %>">
         <input type="hidden" name="sortOrder" value="<%= sortOrder || 'asc' %>">
-        <button class="btn btn-outline-primary" type="submit">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
       </div>
     </form>
 
     <!-- Filter Panel -->
     <div class="filter-panel">
       <form method="GET" action="/list" id="filterForm">
+        <input type="hidden" name="username" id="filterUsernameInput">
         <div class="row g-2 align-items-end">
           <div class="col-md-2">
             <label class="form-label"><small>Tag</small></label>
@@ -131,13 +133,14 @@
             <button type="submit" class="btn btn-primary btn-sm w-100">Filter</button>
           </div>
         </div>
-        <a href="/list" class="btn btn-link btn-sm mt-2 p-0">Clear Filters</a>
+        <a href="/list?username=<%= username %>" class="btn btn-link btn-sm mt-2 p-0 text-decoration-none text-reset">Clear Filters</a>
       </form>
     </div>
 
     <!-- Save Current View -->
     <div class="mb-3">
       <form method="POST" action="/list/views/save" class="row g-2 align-items-center">
+        <input type="hidden" name="username" id="saveViewUsernameInput">
         <input type="hidden" name="tag" value="<%= filters.tag || '' %>">
         <input type="hidden" name="priority" value="<%= filters.priority || '' %>">
         <input type="hidden" name="dateFrom" value="<%= filters.dateFrom || '' %>">
@@ -149,7 +152,7 @@
           <input type="text" class="form-control form-control-sm" name="viewName" placeholder="View name..." required>
         </div>
         <div class="col-auto">
-          <button type="submit" class="btn btn-outline-success btn-sm">Save View</button>
+          <button type="submit" class="btn btn-success btn-sm">Save View</button>
         </div>
       </form>
     </div>
@@ -161,7 +164,7 @@
         <div class="saved-views-list list-group list-group-flush">
           <% savedViews.forEach(function(view) { %>
             <div class="list-group-item d-flex justify-content-between align-items-center py-1">
-              <a href="/list/views/<%= view._id %>/load">
+              <a href="/list/views/<%= view._id %>/load" class="text-decoration-none text-reset">
                 <%= view.name %>
                 <% if (view.pinned) { %>
                   <span class="badge bg-primary pinned-badge">Pinned</span>
@@ -170,15 +173,18 @@
               <div class="btn-group btn-group-sm" role="group">
                 <% if (!view.pinned) { %>
                   <form method="POST" action="/list/views/<%= view._id %>/pin" class="m-0">
-                    <button type="submit" class="btn btn-outline-primary py-0">Pin</button>
+                    <input type="hidden" name="username" value="<%= username %>">
+                    <button type="submit" class="btn btn-primary py-0">Pin</button>
                   </form>
                 <% } else { %>
                   <form method="POST" action="/list/views/<%= view._id %>/unpin" class="m-0">
-                    <button type="submit" class="btn btn-outline-secondary py-0">Unpin</button>
+                    <input type="hidden" name="username" value="<%= username %>">
+                    <button type="submit" class="btn btn-secondary py-0">Unpin</button>
                   </form>
                 <% } %>
                 <form method="POST" action="/list/views/<%= view._id %>/delete?_method=DELETE" class="m-0">
-                  <button type="submit" class="btn btn-outline-danger py-0">X</button>
+                  <input type="hidden" name="username" value="<%= username %>">
+                  <button type="submit" class="btn btn-danger py-0">X</button>
                 </form>
               </div>
             </div>
@@ -188,12 +194,12 @@
     <% } %>
 
     <!-- Task Count -->
-    <p class="text-muted"><small><%= posts.length %> task(s) found</small></p>
+    <p><small><%= posts.length %> task(s) found</small></p>
 
     <!-- Task List -->
     <ul class="list-group">
       <% if (posts.length === 0) { %>
-        <li class="list-group-item text-center text-muted">No tasks found.</li>
+        <li class="list-group-item text-center">No tasks found.</li>
       <% } %>
       <% var now = new Date(); %>
       <% posts.forEach(function(post) { %>
@@ -211,7 +217,7 @@
         <li class="list-group-item <%= rowClass %>">
           <div class="d-flex justify-content-between align-items-start">
             <div>
-              <h5>
+              <h5 class="list-task-title">
                 <a href="/detail/<%= post._id %>">
                   <% if (post.completed) { %><s><% } %>
                   <%= post.title %>
@@ -219,7 +225,7 @@
                 </a>
               </h5>
               <p class="mb-1">
-                <small class="text-muted">
+                <small>
                   Due: <%= dueDisplay %> at <%= dueTime %>
                   <% if (isOverdue) { %> <span class="text-danger fw-bold">OVERDUE</span><% } %>
                   <% if (isToday) { %> <span class="text-warning fw-bold">TODAY</span><% } %>
@@ -237,13 +243,32 @@
               </p>
             </div>
             <div>
-              <a href="/edit/<%= post._id %>" class="btn btn-sm btn-outline-secondary">Edit</a>
-              <button class="delete btn btn-sm btn-outline-danger" data-id="<%= post._id %>">Delete</button>
+              <% if (!post.completed) { %>
+                <button class="complete btn btn-sm btn-success" data-id="<%= post._id %>">Complete</button>
+              <% } %>
+              <a href="/edit/<%= post._id %>" class="btn btn-sm btn-secondary">Edit</a>
+              <button class="delete btn btn-sm btn-danger" data-id="<%= post._id %>">Delete</button>
             </div>
           </div>
         </li>
       <% }); %>
     </ul>
+    <div id="achievementToast" style="
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: none;
+      background: #198754;
+      color: white;
+      padding: 14px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-weight: 500;
+      min-width: 250px;
+      ">
+  🏆 <span id="achievementToastMsg"></span>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -260,21 +285,49 @@
       });
     });
   </script>
+
+  <script>
+    $('.complete').click(function () {
+      const btn = $(this);
+      const username = localStorage.getItem("username");
+      $.ajax({
+        method: 'POST',
+        url: '/complete/' + btn.data('id'),
+        contentType: 'application/json',
+        data: JSON.stringify({ username: username })
+      }).done(function (res) {
+        // Disable button and strike through the title visually
+        btn.prop('disabled', true).text('Done');
+        btn.closest('li').find('h5 a').wrapInner('<s></s>');
+
+        if (res.newlyUnlocked && res.newlyUnlocked.length > 0) {
+  const toast = document.getElementById('achievementToast');
+  document.getElementById('achievementToastMsg').textContent = 
+    'Achievement unlocked: ' + res.newlyUnlocked.join(', ');
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 4000);
+}
+      }).fail(function () {
+        alert('Could not complete task.');
+      });
+    });
+  </script>
+
   <script>
     let username = localStorage.getItem("username");
-    document.querySelectorAll('#usernameInput').forEach(el => {
+    document.querySelectorAll('#usernameInput, #filterUsernameInput, #saveViewUsernameInput').forEach(el => {
       el.value = username;
     });
-</script>
+  </script>
 
-<script>
-  if (username) {
-    document.querySelectorAll('.smart-nav a').forEach(link => {
-      const url = new URL(link.href, window.location.origin);
-      url.searchParams.set("username", username);
-      link.href = url.toString();
-    });
-  }
-</script>
+  <script>
+    if (username) {
+      document.querySelectorAll('.smart-nav a').forEach(link => {
+        const url = new URL(link.href, window.location.origin);
+        url.searchParams.set("username", username);
+        link.href = url.toString();
+      });
+    }
+  </script>
 </body>
 </html>

@@ -55,21 +55,34 @@ router.post("/", async (req, res) => {
 });
 
 //patch
-router.patch("/:userId/customization/font", async (req, res) => {
+router.patch("/:userId/customization/theme", async (req, res) => {
   try {
-    const { font } = req.body;
+    const { theme } = req.body;
 
-    const user = await User.findOneAndUpdate(
-      { user_id: req.params.userId },
-      { $set: { "customization.font": font } },
-      { new: true }
-    );
+    const user = await User.findOne({ user_id: req.params.userId });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user);
+    // Security Check
+    if (!user.customization?.unlockedThemes?.includes(theme)) {
+      return res.status(403).json({ message: "Theme is locked" });
+    }
+
+    const updateUser = await User.findOneAndUpdate(
+      { user_id: req.params.userId },
+      {
+        $set: {
+          "customization.activeTheme": theme
+        }
+      },
+      { new: true }
+    );
+
+    res.json({
+      activeTheme: updateUser.customization.activeTheme
+    });
 
   } catch (err) {
     console.error(err);
