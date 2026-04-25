@@ -5,7 +5,6 @@ const monthNames = [
 
 let currentDate = new Date(); // current date
 
-localStorage.setItem("username", "admin"); // for testing purposes, set a default username in localStorage
 window.CURRENT_USER_ID = localStorage.getItem("username");
 
 const calendarBody = document.getElementById('calendar-body');
@@ -20,7 +19,6 @@ const nextBtn = document.getElementById('next-month');
 		await fetchCalendarTasks(window.CURRENT_USER_ID); // fetch tasks for current user
 		renderCalendar(currentDate);
 		renderDueTasks(currentDate);
-		addEventListeners();
 	});
 })();
 
@@ -41,8 +39,6 @@ function addEventListeners() {
 		})
 	});
 
-	console.log(modal);
-	console.log(document.querySelectorAll('.task'));
 }
 
 function renderCalendar(date) {
@@ -114,6 +110,7 @@ function renderTasks() {
 
     tasks.forEach(task => {
         const startDate = task.date.slice(0, 10);
+		
         //const endDate = task.end_date ? task.end_date.slice(0, 10) : startDate;
         const startCell = cells.find(c => c.dataset.date === startDate);
 
@@ -141,9 +138,10 @@ function renderTasks() {
 
         const taskContainer = cells[startIndex].querySelector('.tasks-container');
         taskContainer.appendChild(taskDiv);
+
     })
     
-
+	addEventListeners();
 }
 
 function renderDueTasks(date) {
@@ -155,7 +153,9 @@ function renderDueTasks(date) {
 
 	let dueTasks = window.CALENDAR_TASKS.filter(task => {
 		const taskDate = new Date(task.date);
-		return ( taskDate.getMonth() === month || taskDate.getMonth() === nextMonth ) && taskDate.getFullYear() === year;
+		return taskDate > currentDate &&
+			(taskDate.getMonth() === month || taskDate.getMonth() === nextMonth) &&
+			taskDate.getFullYear() === year;
 	});
 
 	dueTasks.sort((a, b) => new Date(a.date) - new Date(b.date)); // sort by date ascending
@@ -176,7 +176,9 @@ function renderDueTasks(date) {
 		return currentDate > taskDate;
 	});
 
-	if (!overdueTasks.length === 0) { // render overdue tasks if there are any
+	console.log(overdueTasks);	
+
+	if (overdueTasks.length > 0) { // render overdue tasks if there are any
 		overdueTasks.sort((a, b) => new Date(a.date) - new Date(b.date)); // sort by date ascending
 		overdueTasks.forEach(task => {
 			let newElement = document.createElement('li');

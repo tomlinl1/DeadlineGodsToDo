@@ -3,7 +3,19 @@
   table-layout: fixed;
 }
 
-#calendar-body td {
+/* table styles*/
+.calendar-table {
+  background-color: transparent;
+  color: inherit;
+}
+
+.calendar-table th, .calendar-table td {
+  background-color: var(--modal-color) !important;
+  color: inherit !important;
+}
+
+/* cell styles */
+.calendar-day {
   width: 100px;
   vertical-align: top;
   padding: 6px;
@@ -29,11 +41,29 @@
   max-width: 100%;
 }
 
+
+/* task styles */
+
+.priority-low {
+  --border-color: #0DCAF0;
+}
+
+.priority-medium {
+  --border-color: #FFC107;
+}
+
+.priority-high {
+  --border-color: #DC3545;
+}
+
 .task{
   min-width: 0;
   max-width: 100%;
+
   border: 5px solid transparent;
-  border-color: aqua;
+  border-color: var(--border-color);
+  border-radius: 5px;
+  padding-left: 5px;
   box-sizing: border-box;
   display: block;
   
@@ -43,21 +73,30 @@
 }
 
 /* show day number slightly bold */
-.calendar-day {
+.day-number {
   font-weight: 500;
 }
 
 /* muted cells for prev/next month (Bootstrap's text-muted already dims, this adds subtle bg) */
-.text-muted {
-  color: rgba(148, 148, 148, 0.45) ;
-  background-color: #f8f9fa;
-}
-
-/* indicate hover for clickable days */
-.calendar-day:hover {
-  background-color: rgba(0,0,0,0.03);
+.text-muted .day-number {
+  color: rgba(148, 148, 148, 0.45) !important;
 }
 
 .task-due-indicator{
   min-height: 50vh;
 }
+
+.calendar-table td:hover {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/*  Sidebar styles */
+#calendar-sidebar li {
+  border-width: 1px;
+  margin-bottom: 20px;
+}
+
+.task:hover {
+  background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
