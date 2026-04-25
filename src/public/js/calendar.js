@@ -63,6 +63,9 @@ function renderCalendar(date) {
 		
 		const cellContent = document.createElement('div');
 		cellContent.className = 'cell-content';
+		if (isSameDay(cellDate, currentDate)) {
+			cellContent.id = 'current-day'; // add id for styling current day
+		}
 
 		const cell = document.createElement('td');                  // create the element in the cell
 		cell.classList.add('calendar-day');                         // class of the days
@@ -196,6 +199,12 @@ function renderDueTasks(date) {
 function changeMonth(offset) {
 	currentDate.setMonth(currentDate.getMonth() + offset);
 	renderCalendar(currentDate);
+}
+
+function isSameDay(date1, date2) {
+  return date1.getFullYear() === date2.getFullYear() &&
+         date1.getMonth() === date2.getMonth() &&
+         date1.getDate() === date2.getDate();
 }
 
 async function fetchCalendarTasks(userId) {
