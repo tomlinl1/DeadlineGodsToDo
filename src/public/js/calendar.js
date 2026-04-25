@@ -3,7 +3,7 @@ const monthNames = [
 		'July','August','September','October','November','December'
 ];
 
-let currentDate = new Date(); // current date
+const currentDate = new Date(); // current date
 
 window.CURRENT_USER_ID = localStorage.getItem("username");
 
@@ -19,6 +19,7 @@ const nextBtn = document.getElementById('next-month');
 		await fetchCalendarTasks(window.CURRENT_USER_ID); // fetch tasks for current user
 		renderCalendar(currentDate);
 		renderDueTasks(currentDate);
+		addEventListeners();
 	});
 })();
 
@@ -27,7 +28,20 @@ function addEventListeners() {
 	const modalTitle = document.getElementById('calendarModalLabel');
 	const modalLink = document.getElementById('modalDetailLink');
 
-	document.querySelectorAll('.task').forEach(task => {
+	document.addEventListener('click', (e) => {
+		if (e.target.classList.contains('task')) {
+			console.log(e.target);
+
+			modalTitle.textContent = e.target.textContent; // set modal title to task title
+			let taskId = e.target.dataset.taskId;
+			modalLink.href = `/detail/${taskId}`; // set link to task edit page
+
+			modal.show();
+		}
+	});
+
+	
+	/* document.querySelectorAll('.task').forEach(task => {
 		task.addEventListener('click', (e) => {
 			console.log(e.target);
 
@@ -37,7 +51,7 @@ function addEventListeners() {
 
 			modal.show();
 		})
-	});
+	}); */
 
 }
 
@@ -63,7 +77,7 @@ function renderCalendar(date) {
 		
 		const cellContent = document.createElement('div');
 		cellContent.className = 'cell-content';
-		if (isSameDay(cellDate, currentDate)) {
+		if (isSameDay(cellDate, new Date())) {
 			cellContent.id = 'current-day'; // add id for styling current day
 		}
 
@@ -144,7 +158,6 @@ function renderTasks() {
 
     })
     
-	addEventListeners();
 }
 
 function renderDueTasks(date) {
