@@ -196,7 +196,9 @@ router.post("/complete/:id", async (req, res) => {
 
       // Award points
       const achievement = await Achievement.findOne({ id: trigger.id });
-      if (achievement) user.total_points += Number(achievement.points);
+      if (achievement) {
+        user.total_points += Number(achievement.points);
+      }
 
       // Unlock theme if applicable
       const themeUnlocks = {
@@ -212,7 +214,9 @@ router.post("/complete/:id", async (req, res) => {
         user.customization.unlockedThemes.push(theme);
       }
 
-      newlyUnlocked.push(achievement.name);
+      if (achievement) {
+        newlyUnlocked.push(achievement.name);
+      }
     }
 
     await user.save();
